@@ -16,7 +16,7 @@
         <![endif]-->
         <div id="container">
             <label for="gallerySelector">Halloween Galleries</label>
-            <select name="gallerySelector" onchange="newSearch(this.value)">
+            <select name="gallerySelector" onchange="Gallery.render(this.value)">
                 <option name="pumpkin" value="pumpkin">Pumpkin</option>
                 <option name="witch" value="witch">Witch</option>
                 <option name="ghost" value="ghost">Ghost</option>
@@ -26,5 +26,9 @@
             <div id="gallery"></div>
         </div>
         <script src="./src/lightbox.js"></script>
+        <script type="text/javascript">
+            // Use the same instance in the above drop-down selector -- e.g. Gallery.render(this.value)
+            var Gallery = new Lightbox();
+        </script>
     </body>
 </html>
