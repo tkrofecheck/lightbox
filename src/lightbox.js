@@ -22,7 +22,7 @@ Lightbox.prototype.getData = function(url) {
 
 	xhr.open('GET', url, true);
 	xhr.send();
-}
+};
 
 Lightbox.prototype.search = function(value) {
 	console.log('select', this);
@@ -35,7 +35,8 @@ Lightbox.prototype.render = function(searchQuery) {
 	}
 
 	var apiUrl =
-		'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo&q=' +
+		'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo' +
+		'&q=' +
 		searchQuery +
 		'&safe=high&searchType=image&key=AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw';
 
@@ -48,6 +49,19 @@ Lightbox.prototype.ready = function() {
 };
 
 Lightbox.prototype.createDOM = function() {
-	var gallery = document.getElementById('gallery');
-	gallery.innerHTML = this.responseJson;
+	var gallery = document.getElementById('gallery'),
+		images = this.responseJson.items,
+		div,
+		photo;
+
+	for (let i = 0; i < images.length; i++) {
+		div = document.createElement('div');
+		photo = document.createElement('img');
+
+		div.setAttribute('class', 'thumb-container');
+		photo.setAttribute('src', images[i].image.thumbnailLink);
+		
+		div.appendChild(photo);
+		gallery.appendChild(div);
+	}
 };
