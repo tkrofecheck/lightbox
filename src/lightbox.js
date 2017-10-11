@@ -11,7 +11,7 @@ Lightbox.prototype.getData = function(url) {
 		xhr = new XMLHttpRequest();
 	} else {
 		// code for older browsers
-		xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
+		xhr = new ActiveXObject('Microsoft.XMLHTTP');
 	}
 
 	xhr.onreadystatechange = function() {
