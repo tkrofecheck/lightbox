@@ -55,15 +55,34 @@ Lightbox.prototype.createDOM = function() {
 		photo;
 
 	gallery.innerHTML = ''; // clear gallery to display new search
-	
+
 	for (let i = 0; i < images.length; i++) {
 		div = document.createElement('div');
 		photo = document.createElement('img');
 
 		div.setAttribute('class', 'thumb-container');
 		photo.setAttribute('src', images[i].image.thumbnailLink);
-		
+		photo.setAttribute('data-src', images[i].link);
+
 		div.appendChild(photo);
 		gallery.appendChild(div);
 	}
+};
+
+Lightbox.prototype.modalView = function() {
+	var modal = document.getElementsByClassName('modal')[0];
+
+	modal.innerHTML =
+		'<div class="modal">' +
+			'<div class="photo-container">' +
+				'<img/>' +
+				'<div class="description"></div>' +
+			'</div>' +
+			'<div class="nav">' +
+				'<span class="left"></span>' +
+				'<span class="right"></span>' +
+			'</div>'
+		'</div>';
+	
+	modal.style.display = "block";
 };
