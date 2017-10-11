@@ -1,5 +1,6 @@
 function Lightbox(url) {
 	this.responseJson = null;
+	this.photos = [];
 }
 
 Lightbox.prototype.getData = function(url) {
@@ -64,6 +65,12 @@ Lightbox.prototype.createDOM = function() {
 		photo.setAttribute('src', images[i].image.thumbnailLink);
 		photo.setAttribute('data-src', images[i].link);
 
+		this.photos.push({
+			src: images[i].link,
+			description: images[i].title,
+			ref: images[i].displayLink
+		}); // used later for navigating modal photos
+
 		div.appendChild(photo);
 		gallery.appendChild(div);
 	}
@@ -79,13 +86,10 @@ Lightbox.prototype.bindEvents = function() {
 	thumbnails = document
 		.getElementById('gallery')
 		.getElementsByClassName('thumb-container');
-	
-	console.log('thumbnails', thumbnails);
 
-	for (let i=0; i < thumbnails.length; i++) {
+	for (let i = 0; i < thumbnails.length; i++) {
 		thumbnails[i].addEventListener('click', function(e) {
 			e.stopPropagation();
-			console.log(this);
 			_this.Modal(this);
 		});
 	}
@@ -95,16 +99,26 @@ Lightbox.prototype.Modal = function(thumbEl) {
 	var container = document.getElementById('container'),
 		modal = document.createElement('div');
 
+	console.log(thumbEl);
 	modal.setAttribute('class', 'modal');
-	modal.innerHTML = 
+	modal.innerHTML =
 		'<div class="photo-container">' +
-			'<img src="' + thumbEl.getAttribute('data-src') + '">' +
-			'<div class="description"></div>' +
+		'<img src="' +
+		thumbEl.querySelector('img').getAttribute('data-src') +
+		'">' +
+		'<div class="description"></div>' +
 		'</div>' +
 		'<div class="nav">' +
-			'<span class="left"></span>' +
-			'<span class="right"></span>' +
+		'<span class="left"></span>' +
+		'<span class="right"></span>' +
 		'</div>';
 
 	container.appendChild(modal);
+	this.bind_modalEvents();
+};
+
+Lightbox.prototype.bind_modalEvents = function() {
+	var modal = document.querySelector('.modal');
+
+	console.log('modal', modal);
 };
