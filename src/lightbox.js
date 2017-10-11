@@ -54,6 +54,8 @@ Lightbox.prototype.createDOM = function() {
 		div,
 		photo;
 
+	gallery.innerHTML = ''; // clear gallery to display new search
+	
 	for (let i = 0; i < images.length; i++) {
 		div = document.createElement('div');
 		photo = document.createElement('img');
