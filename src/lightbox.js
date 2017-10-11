@@ -9,6 +9,7 @@ function getData(obj, url) {
 	xhr.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			obj.responseJson = JSON.parse(this.responseText);
+			obj.ready();
 		}
 	};
 	xhr.open('GET', url, true);
@@ -17,10 +18,21 @@ function getData(obj, url) {
 
 function Lightbox(url) {
 	this.apiUrl = url;
+	this.responseJson = null;
 }
 
 Lightbox.prototype.init = function() {
 	getData(this, this.apiUrl);
+};
+
+Lightbox.prototype.ready = function() {
+	// Data is ready, continue...
+	this.createDOM();
+};
+
+Lightbox.prototype.createDOM = function() {
+	var gallery = document.getElementById('gallery');
+	gallery.innerHTML = this.responseJson;
 };
 
 var Gallery = new Lightbox(
