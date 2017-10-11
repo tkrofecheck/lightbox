@@ -99,9 +99,23 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 	if (document.querySelector('.modal')) {
 		return;
 	}
-	
-	var container = document.getElementById('container'),
-		modal = document.createElement('div');
+
+	var _this = this,
+		container = document.getElementById('container'),
+		modal = document.createElement('div'),
+		showModal = function() {
+			var photo = modal.querySelector('img');
+			console.log('showModal', photo);
+
+			if (!photo.offsetWidth) {
+				window.requestAnimationFrame(showModal);
+				return;
+			} else {
+				console.log('here');
+				modal.className += ' show';
+				_this.bind_modalEvents();
+			}
+		};
 
 	console.log(thumbEl);
 	modal.setAttribute('class', 'modal');
@@ -119,7 +133,8 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 		'</div>';
 
 	container.appendChild(modal);
-	this.bind_modalEvents();
+
+	showModal();
 };
 
 Lightbox.prototype.bind_modalEvents = function() {
