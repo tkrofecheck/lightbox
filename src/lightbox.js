@@ -1,53 +1,99 @@
+/* START: Cookie set/get from W3schools */
 function Lightbox(url) {
+	this.apiKeys = [
+		'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc',
+		'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
+		'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
+	]; // each key allows 100 search per day
 	this.responseJson = null;
 	this.photos = [];
-	this.useWebStorage = function() {
-		try {
-			sessionStorage.setItem('test', 'test');
-			sessionStorage.clear();
-			return true;
-		} catch (e) {
-			console.log('web storage not supported');
-			return false;
-		}
-	};
 }
+
+Lightbox.prototype.useWebStorage = function() {
+	try {
+		sessionStorage.setItem('test', 'test');
+		sessionStorage.clear();
+		return true;
+	} catch (e) {
+		console.log('web storage not supported');
+		return false;
+	}
+};
+
+Lightbox.prototype.setCookie = function(cname, cvalue, exdays) {
+	var d = new Date();
+	d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+	var expires = 'expires=' + d.toUTCString();
+	document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+};
+
+Lightbox.prototype.getCookie = function(cname) {
+	var name = cname + '=';
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) === ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) === 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return '';
+};
 
 Lightbox.prototype.getData = function(query) {
 	var _this = this,
-		url =
-			'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo&q=' +
-			query +
-			'&safe=high&searchType=image&key=AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
-		cachedJsonStr,
-		xhr;
+		useWebStorage = _this.useWebStorage(),
+		cachedJsonStr =
+			sessionStorage.getItem(query) || _this.getCookie(query) || null,
+		xhrSend = function(index) {
+			var xhr, url;
 
-	/* START: Cookie set/get from W3schools */
-	function setCookie(cname, cvalue, exdays) {
-		var d = new Date();
-		d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-		var expires = 'expires=' + d.toUTCString();
-		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
-	}
-
-	function getCookie(cname) {
-		var name = cname + '=';
-		var decodedCookie = decodeURIComponent(document.cookie);
-		var ca = decodedCookie.split(';');
-		for (var i = 0; i < ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0) === ' ') {
-				c = c.substring(1);
+			console.log(index);
+			if (window.XMLHttpRequest) {
+				xhr = new XMLHttpRequest();
+			} else {
+				// code for older browsers
+				xhr = new ActiveXObject('Microsoft.XMLHTTP');
 			}
-			if (c.indexOf(name) === 0) {
-				return c.substring(name.length, c.length);
-			}
-		}
-		return '';
-	}
-	/* END: Cookie set/get from W3schools */
 
-	cachedJsonStr = sessionStorage.getItem(query) || getCookie(query);
+			xhr.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200) {
+					if (useWebStorage) {
+						sessionStorage.setItem(this.responseText);
+					} else {
+						_this.setCookie(query, this.responseText, 0);
+					}
+
+					_this.responseJson = JSON.parse(this.responseText);
+					_this.ready();
+				} else {
+					if ((index === _this.apiKeys.length-1) && this.status === 403) {
+						_this.error(
+							JSON.parse(this.responseText).error.errors[0]
+						);
+					} else {
+						if (index < _this.apiKeys.length-1) {
+							index++;
+							xhrSend(index);
+						}
+					}
+
+					return;
+				}
+			};
+
+			url =
+				'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo&q=' +
+				query +
+				'&safe=high&searchType=image&key=' +
+				_this.apiKeys[index];
+
+			xhr.open('GET', url, true);
+			xhr.send();
+		};
 
 	if (
 		typeof cachedJsonStr !== 'undefined' &&
@@ -57,33 +103,7 @@ Lightbox.prototype.getData = function(query) {
 		_this.responseJson = JSON.parse(cachedJsonStr);
 		_this.ready();
 	} else {
-		if (window.XMLHttpRequest) {
-			xhr = new XMLHttpRequest();
-		} else {
-			// code for older browsers
-			xhr = new ActiveXObject('Microsoft.XMLHTTP');
-		}
-
-		xhr.onreadystatechange = function() {
-			if (this.readyState === 4 && this.status === 200) {
-				_this.responseJson = JSON.parse(this.responseText);
-
-				if (this.useWebStorage) {
-					sessionStorage.setItem(this.responseText);
-				} else {
-					setCookie(query, this.responseText, 0);
-				}
-
-				_this.ready();
-			} else {
-				if (this.status === 403) {
-					_this.error(JSON.parse(this.responseText).error.errors[0]);
-				}
-			}
-		};
-
-		xhr.open('GET', url, true);
-		xhr.send();
+		xhrSend(0);
 	}
 };
 
