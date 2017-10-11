@@ -187,6 +187,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 	modal.setAttribute('class', 'modal');
 	modal.setAttribute('data-index', index);
 	modal.innerHTML =
+		'<div class="close">&times;</div>' +
 		'<div class="photo-container">' +
 		'<img src="' +
 		thumbEl.querySelector('img').getAttribute('data-src') +
@@ -206,6 +207,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 Lightbox.prototype.bind_modalEvents = function() {
 	var _this = this,
 		modal = document.querySelector('.modal'),
+		close = modal.querySelector('.close'),
 		leftNav = modal.querySelector('.nav .left'),
 		rightNav = modal.querySelector('.nav .right'),
 		index = parseInt(modal.getAttribute('data-index')),
@@ -231,7 +233,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 		updateImage(index);
 	});
 
-	window.addEventListener('click', function() {
+	document.addEventListener('click', function() {
 		modal.remove();
 	});
 };
