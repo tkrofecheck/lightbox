@@ -1,4 +1,4 @@
-function getData(url) {
+function getData(obj, url) {
 	var xhr;
 	if (window.XMLHttpRequest) {
 		xhr = new XMLHttpRequest();
@@ -8,7 +8,7 @@ function getData(url) {
 	}
 	xhr.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			console.log(this.responseText);
+			obj.responseJson = JSON.parse(this.responseText);
 		}
 	};
 	xhr.open('GET', url, true);
@@ -20,7 +20,7 @@ function Lightbox(url) {
 }
 
 Lightbox.prototype.init = function() {
-	getData(this.apiUrl);
+	getData(this, this.apiUrl);
 };
 
 var Gallery = new Lightbox(
