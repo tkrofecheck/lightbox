@@ -148,17 +148,20 @@ Lightbox.prototype.bind_modalEvents = function() {
 
 			modal.querySelector('.description').innerHTML =
 				_this.photos[i].description;
-		};
+		},
+		position;
 
 	leftNav.addEventListener('click', function(e) {
 		e.stopPropagation();
-		index = index === _this.photos.length ? 0 : index - 1;
+		position = _this.photos.length - 1;
+		index = index === 0 ? position : index - 1;
 		updateImage(index);
 	});
 
 	rightNav.addEventListener('click', function(e) {
 		e.stopPropagation();
-		index = index === _this.photos.length ? 0 : index + 1;
+		position = _this.photos.length - 1;
+		index = index === position ? 0 : index + 1;
 		updateImage(index);
 	});
 
