@@ -90,17 +90,18 @@ Lightbox.prototype.bindEvents = function() {
 	for (let i = 0; i < thumbnails.length; i++) {
 		thumbnails[i].addEventListener('click', function(e) {
 			e.stopPropagation();
-			_this.Modal(this);
+			_this.Modal(this, i);
 		});
 	}
 };
 
-Lightbox.prototype.Modal = function(thumbEl) {
+Lightbox.prototype.Modal = function(thumbEl, index) {
 	var container = document.getElementById('container'),
 		modal = document.createElement('div');
 
 	console.log(thumbEl);
 	modal.setAttribute('class', 'modal');
+	modal.setAttribute('data-index', index);
 	modal.innerHTML =
 		'<div class="photo-container">' +
 		'<img src="' +
@@ -109,8 +110,8 @@ Lightbox.prototype.Modal = function(thumbEl) {
 		'<div class="description"></div>' +
 		'</div>' +
 		'<div class="nav">' +
-		'<span class="left"></span>' +
-		'<span class="right"></span>' +
+		'<span class="left">&lt;</span>' +
+		'<span class="right">&gt;</span>' +
 		'</div>';
 
 	container.appendChild(modal);
@@ -118,7 +119,31 @@ Lightbox.prototype.Modal = function(thumbEl) {
 };
 
 Lightbox.prototype.bind_modalEvents = function() {
-	var modal = document.querySelector('.modal');
+	var _this = this,
+		modal = document.querySelector('.modal'),
+		leftNav = modal.querySelector('.nav .left'),
+		rightNav = modal.querySelector('.nav .right'),
+		index = parseInt(modal.getAttribute('data-index')),
+		updateImage = function(i) {
+			modal.querySelector('img').setAttribute('src', _this.photos[i].src);
 
-	console.log('modal', modal);
+			modal.querySelector('.description').innerHTML =
+				_this.photos[i].description;
+		};
+
+	leftNav.addEventListener('click', function(e) {
+		e.stopPropagation();
+		index = index === _this.photos.length ? 0 : index - 1;
+		updateImage(index);
+	});
+
+	rightNav.addEventListener('click', function(e) {
+		e.stopPropagation();
+		index = index === _this.photos.length ? 0 : index + 1;
+		updateImage(index);
+	});
+
+	window.addEventListener('click', function() {
+		modal.remove();
+	});
 };
