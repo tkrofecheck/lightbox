@@ -1,9 +1,8 @@
 function Lightbox(url) {
-	this.apiUrl = url;
 	this.responseJson = null;
 }
 
-Lightbox.prototype.getData(url) {
+Lightbox.prototype.getData = function(url) {
 	var _this = this,
 		xhr;
 
@@ -20,7 +19,7 @@ Lightbox.prototype.getData(url) {
 			_this.ready();
 		}
 	};
-	
+
 	xhr.open('GET', url, true);
 	xhr.send();
 }
@@ -40,7 +39,7 @@ Lightbox.prototype.render = function(searchQuery) {
 		searchQuery +
 		'&safe=high&searchType=image&key=AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw';
 
-	getData(this, apiUrl);
+	this.getData(apiUrl);
 };
 
 Lightbox.prototype.ready = function() {
