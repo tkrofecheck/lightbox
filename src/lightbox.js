@@ -96,6 +96,10 @@ Lightbox.prototype.bindEvents = function() {
 };
 
 Lightbox.prototype.Modal = function(thumbEl, index) {
+	if (document.querySelector('.modal')) {
+		return;
+	}
+	
 	var container = document.getElementById('container'),
 		modal = document.createElement('div');
 
