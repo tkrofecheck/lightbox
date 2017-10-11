@@ -67,22 +67,44 @@ Lightbox.prototype.createDOM = function() {
 		div.appendChild(photo);
 		gallery.appendChild(div);
 	}
+
+	this.bindEvents();
 };
 
-Lightbox.prototype.modalView = function() {
-	var modal = document.getElementsByClassName('modal')[0];
+Lightbox.prototype.bindEvents = function() {
+	var _this = this,
+		thumbnails,
+		thumb;
 
-	modal.innerHTML =
-		'<div class="modal">' +
-			'<div class="photo-container">' +
-				'<img/>' +
-				'<div class="description"></div>' +
-			'</div>' +
-			'<div class="nav">' +
-				'<span class="left"></span>' +
-				'<span class="right"></span>' +
-			'</div>'
-		'</div>';
+	thumbnails = document
+		.getElementById('gallery')
+		.getElementsByClassName('thumb-container');
 	
-	modal.style.display = "block";
+	console.log('thumbnails', thumbnails);
+
+	for (let i=0; i < thumbnails.length; i++) {
+		thumbnails[i].addEventListener('click', function(e) {
+			e.stopPropagation();
+			console.log(this);
+			_this.Modal(this);
+		});
+	}
+};
+
+Lightbox.prototype.Modal = function(thumbEl) {
+	var container = document.getElementById('container'),
+		modal = document.createElement('div');
+
+	modal.setAttribute('class', 'modal');
+	modal.innerHTML = 
+		'<div class="photo-container">' +
+			'<img src="' + thumbEl.getAttribute('data-src') + '">' +
+			'<div class="description"></div>' +
+		'</div>' +
+		'<div class="nav">' +
+			'<span class="left"></span>' +
+			'<span class="right"></span>' +
+		'</div>';
+
+	container.appendChild(modal);
 };
