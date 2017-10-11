@@ -12,7 +12,7 @@ function Lightbox(url) {
 Lightbox.prototype.useWebStorage = function() {
 	try {
 		sessionStorage.setItem('test', 'test');
-		sessionStorage.clear();
+		sessionStorage.removeItem('test');
 		return true;
 	} catch (e) {
 		console.log('web storage not supported');
