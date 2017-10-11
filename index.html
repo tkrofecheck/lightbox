@@ -17,11 +17,12 @@
         <div id="container">
             <label for="gallerySelector">Halloween Galleries</label>
             <select name="gallerySelector" onchange="Gallery.render(this.value)">
-                <option name="pumpkin" value="pumpkin">Pumpkin</option>
-                <option name="witch" value="witch">Witch</option>
-                <option name="ghost" value="ghost">Ghost</option>
-                <option name="scarecrow" value="scarecrow">Scarecrow</option>
-                <option name="clown" value="clown">Clown</option>
+                <option value="" selected="selected">Select a Gallery</option>
+                <option value="pumpkin">Pumpkin</option>
+                <option value="witch">Witch</option>
+                <option value="ghost">Ghost</option>
+                <option value="scarecrow">Scarecrow</option>
+                <option value="clown">Clown</option>
             </select>
             <div id="gallery"></div>
         </div>
