@@ -27,10 +27,11 @@ html, body, div, span {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 140px;
+    height: 145px;
     outline: 1px solid #dddddd;
+    outline-offset: -5px;
     background-color: #ffffff;
-    transition: background .2s ease-in-out;
+    transition: all .2s ease-in-out;
 }
 
 .gallery::after,
@@ -40,11 +41,16 @@ html, body, div, span {
 }
 
 .gallery .thumb-container:hover {
-    background-color: #dddddd;
+    outline: 1px solid red;
+    outline-offset: -10px;
+}
+
+.gallery .thumb-container.empty {
+    visibility: hidden;
 }
 
 .gallery .thumb-container img {
-    max-width: 100px;
+    max-width: 125px;
     max-height: 125px
 }
 
@@ -107,6 +113,12 @@ html, body, div, span {
     height: 40px;
 }
 
+@media (min-width: 400px) {
+    .gallery .thumb-container img {
+        max-width: 100%;
+    }
+}
+
 @media (min-width: 640px) {
     #container {
         margin: 20px;
@@ -120,10 +132,6 @@ html, body, div, span {
     .gallery .thumb-container,
     .gallery .thumb-container::after {
         width: 33.33%;
-    }
-    
-    .gallery .thumb-container img {
-        max-width: 100%;
     }
 }
 

@@ -154,34 +154,54 @@ Lightbox.prototype.error = function(error) {
 Lightbox.prototype.render = function() {
 	var _this = this,
 		gallery = document.querySelector('.gallery'),
-		images = this.responseJson.items,
+		images = _this.responseJson.items,
+		winWidth = document.documentElement.clientWidth,
 		div,
 		photo,
 		thumbnails,
 		thumb;
 
-	gallery.innerHTML = ''; // clear gallery to display new search
-
-	for (let i = 0; i < images.length; i++) {
+	function createDiv(index) {
 		div = document.createElement('div');
-		photo = document.createElement('img');
 
-		div.setAttribute('class', 'thumb-container');
-		photo.setAttribute('src', images[i].image.thumbnailLink);
-		photo.setAttribute('data-src', images[i].link);
+		console.log(index);
+		if (index >= 0) {
+			div.setAttribute('class', 'thumb-container');
 
-		this.photos.push({
-			src: images[i].link,
-			description: images[i].title,
-			ref: images[i].displayLink
-		}); // used later for navigating modal photos
+			photo = document.createElement('img');
+			photo.setAttribute('src', images[index].image.thumbnailLink);
+			photo.setAttribute('data-src', images[index].link);
 
-		div.appendChild(photo);
+			_this.photos.push({
+				src: images[index].link,
+				description: images[index].title,
+				ref: images[index].displayLink
+			}); // used later for navigating modal photos
+
+			div.appendChild(photo);
+		} else {
+			div.setAttribute('class', 'thumb-container empty');
+		}
+
 		gallery.appendChild(div);
 	}
 
+	gallery.innerHTML = ''; // clear gallery to display new search
+
+	for (let i = 0; i < images.length; i++) {
+		createDiv(i);
+	}
+
+	/*
+	* API returns 10 results
+	* Create an addition 2 containers to help with
+	* flexbox alignment
+	*/
+	createDiv();
+	createDiv();
+
 	// Bind events for dynamic elements
-	thumbnails = gallery.getElementsByClassName('thumb-container');
+	thumbnails = gallery.querySelectorAll('.thumb-container:not(.empty)');
 
 	for (let i = 0; i < thumbnails.length; i++) {
 		thumbnails[i].addEventListener('click', function(e) {
