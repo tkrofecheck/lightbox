@@ -118,13 +118,16 @@ Lightbox.prototype.getData = function(query) {
 	}
 };
 
+Lightbox.prototype.init = function() {
+	this.bindEvents();
+};
+
 Lightbox.prototype.render = function(searchQuery) {
-	if (!searchQuery) {
-		console.log('need query to render');
-		return;
+	if (typeof searchQuery !== 'undefined' && searchQuery !== 'custom') {
+		this.getData(searchQuery);
 	}
 
-	this.getData(searchQuery);
+	return;
 };
 
 Lightbox.prototype.ready = function() {
@@ -147,10 +150,13 @@ Lightbox.prototype.error = function(error) {
 };
 
 Lightbox.prototype.createDOM = function() {
-	var gallery = document.getElementById('gallery'),
+	var _this = this,
+		gallery = document.getElementById('gallery'),
 		images = this.responseJson.items,
 		div,
-		photo;
+		photo,
+		thumbnails,
+		thumb;
 
 	gallery.innerHTML = ''; // clear gallery to display new search
 
@@ -172,17 +178,8 @@ Lightbox.prototype.createDOM = function() {
 		gallery.appendChild(div);
 	}
 
-	this.bindEvents();
-};
-
-Lightbox.prototype.bindEvents = function() {
-	var _this = this,
-		thumbnails,
-		thumb;
-
-	thumbnails = document
-		.getElementById('gallery')
-		.getElementsByClassName('thumb-container');
+	// Bind events for dynamic elements
+	thumbnails = gallery.getElementsByClassName('thumb-container');
 
 	for (let i = 0; i < thumbnails.length; i++) {
 		thumbnails[i].addEventListener('click', function(e) {
@@ -227,19 +224,16 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 		modal = document.createElement('div'),
 		showModal = function() {
 			var photo = modal.querySelector('img');
-			console.log('showModal', photo);
 
 			if (!photo.offsetWidth) {
 				window.requestAnimationFrame(showModal);
 				return;
 			} else {
-				console.log('here');
 				modal.className += ' show';
 				_this.bind_modalEvents();
 			}
 		};
 
-	console.log(thumbEl);
 	modal.setAttribute('class', 'modal');
 	modal.setAttribute('data-index', index);
 	modal.innerHTML =

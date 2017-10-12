@@ -65,27 +65,34 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        <div class="connection">
+            <span class="dot"></span>
+            <span class="message"></span>
+        </div>
+
         <div id="container">
-            <div class="connection">
-                <span class="dot"></span>
-                <span class="message"></span>
-            </div>
             <label for="gallerySelector">Halloween Galleries</label>
             <select name="gallerySelector" onchange="Gallery.render(this.value)">
                 <option value="" selected="selected">Select a Gallery</option>
+                <option value="custom">Custom Search</option>
                 <option value="halloween+pumpkin">Pumpkin</option>
                 <option value="halloween+witch">Witch</option>
                 <option value="halloween+ghost">Ghost</option>
                 <option value="halloween+scarecrow">Scarecrow</option>
                 <option value="halloween+clown">Clown</option>
             </select>
+            <form name="customSearch" onsubmit="Gallery.render(this)">
+                <input type="text" name="search" placeholder="Image Search"/>
+                <input type="submit" name="submit" value="Submit"/>
+            </form>
+            <button class="clear-storage">Clear Search History</button>
             <div id="gallery"></div>
         </div>
         <script type="text/javascript">
             //Monitor network connection
             (function () {
                 var connection = document.querySelector('.connection');
-                var dropdown = document.querySelector('select');
+                var formElements = document.getElementById('container').querySelectorAll('input,select,button');
 
                 function connectionStatus() {
                     var status = navigator.onLine ? 'online' : 'offline';
