@@ -101,9 +101,13 @@
                     connection.className = 'connection ' + status;
 
                     if (status === 'offline') {
-                        dropdown.setAttribute('disabled', true);
+                        formElements.forEach(function(node) {
+                            node.setAttribute('disabled', true);
+                        });
                     } else {
-                        dropdown.removeAttribute('disabled');
+                        formElements.forEach(function(el) {
+                            el.removeAttribute('disabled');
+                        });
                     }
                 }
 
@@ -119,6 +123,7 @@
             *  -- e.g. Gallery.render(this.value)
             */
             var Gallery = new Lightbox();
+            Gallery.init();
         </script>
     </body>
 </html>
