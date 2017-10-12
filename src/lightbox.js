@@ -7,6 +7,7 @@ function Lightbox(url) {
 	]; // each key allows 100 searches per day
 	this.responseJson = null;
 	this.photos = [];
+	this.searchPrefix = 'lbsearch_';
 }
 
 Lightbox.prototype.useWebStorage = function() {
@@ -45,9 +46,12 @@ Lightbox.prototype.getCookie = function(cname) {
 
 Lightbox.prototype.getData = function(query) {
 	var _this = this,
+		cacheKey = _this.searchPrefix + query,
 		useWebStorage = _this.useWebStorage(),
 		cachedJsonStr =
-			sessionStorage.getItem(query) || _this.getCookie(query) || null,
+			sessionStorage.getItem(cacheKey) ||
+			_this.getCookie(cacheKey) ||
+			null,
 		complete = false,
 		xhrSend = function(index) {
 			var xhr,
@@ -66,14 +70,13 @@ Lightbox.prototype.getData = function(query) {
 
 			xhr.onreadystatechange = function() {
 				if (this.readyState === 4) {
-					if (
-						this.status === 200) {
+					if (this.status === 200) {
 						complete = true;
 
 						if (useWebStorage) {
-							sessionStorage.setItem(query, this.responseText);
+							sessionStorage.setItem(cacheKey, this.responseText);
 						} else {
-							_this.setCookie(query, this.responseText, 0);
+							_this.setCookie(cacheKey, this.responseText, 1);
 						}
 
 						_this.responseJson = JSON.parse(this.responseText);
@@ -187,6 +190,31 @@ Lightbox.prototype.bindEvents = function() {
 			_this.Modal(this, i);
 		});
 	}
+};
+
+Lightbox.prototype.bindEvents = function() {
+	var _this = this,
+		useWebStorage = _this.useWebStorage,
+		clearStorage;
+
+	clearStorage = document.querySelector('.clear-storage');
+
+	clearStorage.addEventListener('click', function() {
+		console.log('clear search history');
+		var i = sessionStorage.length,
+			re = new RegExp(_this.searchPrefix);
+
+		while (i--) {
+			var key = sessionStorage.key(i);
+			if (re.test(key)) {
+				if (useWebStorage) {
+					sessionStorage.removeItem(key);
+				} else {
+					_this.setCookie(key, -1);
+				}
+			}
+		}
+	});
 };
 
 Lightbox.prototype.Modal = function(thumbEl, index) {
