@@ -10,12 +10,66 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="./src/lightbox.css" rel="stylesheet"/>
+
+        <style>
+            /* External stylesheet may not be available for connection test
+            *  Keep style embedded
+            */
+            .connection {
+                position: relative;
+                display: table;
+                width: auto;
+                height: auto;
+                font-family: 'Verdana', sans-serif;
+                color: #000000;
+                text-transform: uppercase;
+            }
+
+            .connection span {
+                display: table-cell;
+                vertical-align: middle;
+            }
+            
+            .connection .dot {
+                display: block;
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                background-color: yellow;
+                transition: background .5s ease-in-out;
+            }
+
+            .connection.online .dot {
+                background-color: green;
+            }
+
+            .connection.offline .dot {
+                background-color: red;
+            }
+
+            .connection .message:after {
+                position: relative;
+                left: 5px;
+            }
+
+            .connection.online .message:after {
+                content: 'connected';
+            }
+
+            .connection.offline .message:after {
+                content: 'no internet connection!';
+            }
+        </style>
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div id="container">
+            <div class="connection">
+                <span class="dot"></span>
+                <span class="message"></span>
+            </div>
             <label for="gallerySelector">Halloween Galleries</label>
             <select name="gallerySelector" onchange="Gallery.render(this.value)">
                 <option value="" selected="selected">Select a Gallery</option>
@@ -27,9 +81,36 @@
             </select>
             <div id="gallery"></div>
         </div>
+        <script type="text/javascript">
+            //Monitor network connection
+            (function () {
+                var connection = document.querySelector('.connection');
+                var dropdown = document.querySelector('select');
+
+                function connectionStatus() {
+                    var status = navigator.onLine ? 'online' : 'offline';
+                    var disabled = (status === 'offline');
+
+                    connection.className = 'connection ' + status;
+
+                    if (status === 'offline') {
+                        dropdown.setAttribute('disabled', true);
+                    } else {
+                        dropdown.removeAttribute('disabled');
+                    }
+                }
+
+                window.addEventListener('load', connectionStatus);
+                window.addEventListener('online', connectionStatus);
+                window.addEventListener('offline', connectionStatus);
+            })();
+        </script>
+
         <script src="./src/lightbox.js"></script>
         <script type="text/javascript">
-            // Use the same instance in the above drop-down selector -- e.g. Gallery.render(this.value)
+            /* Use the same instance in the above drop-down selector
+            *  -- e.g. Gallery.render(this.value)
+            */
             var Gallery = new Lightbox();
         </script>
     </body>
