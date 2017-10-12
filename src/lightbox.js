@@ -4,7 +4,7 @@ function Lightbox(url) {
 		'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc',
 		'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
 		'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
-	]; // each key allows 100 search per day
+	]; // each key allows 100 searches per day
 	this.responseJson = null;
 	this.photos = [];
 }
@@ -48,10 +48,15 @@ Lightbox.prototype.getData = function(query) {
 		useWebStorage = _this.useWebStorage(),
 		cachedJsonStr =
 			sessionStorage.getItem(query) || _this.getCookie(query) || null,
+		complete = false,
 		xhrSend = function(index) {
-			var xhr, url;
+			var xhr,
+				url =
+					'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo&q=' +
+					query +
+					'&safe=high&searchType=image&key=' +
+					_this.apiKeys[index];
 
-			console.log(index);
 			if (window.XMLHttpRequest) {
 				xhr = new XMLHttpRequest();
 			} else {
@@ -60,41 +65,44 @@ Lightbox.prototype.getData = function(query) {
 			}
 
 			xhr.onreadystatechange = function() {
-				if (this.readyState === 4 && this.status === 200) {
-					if (useWebStorage) {
-						sessionStorage.setItem(this.responseText);
-					} else {
-						_this.setCookie(query, this.responseText, 0);
+				if (this.readyState === 4) {
+					if (
+						this.status === 200) {
+						complete = true;
+
+						if (useWebStorage) {
+							sessionStorage.setItem(query, this.responseText);
+						} else {
+							_this.setCookie(query, this.responseText, 0);
+						}
+
+						_this.responseJson = JSON.parse(this.responseText);
+						_this.ready();
 					}
 
-					_this.responseJson = JSON.parse(this.responseText);
-					_this.ready();
-				} else {
-					if ((index === _this.apiKeys.length-1) && this.status === 403) {
-						_this.error(
-							JSON.parse(this.responseText).error.errors[0]
-						);
-					} else {
-						if (index < _this.apiKeys.length-1) {
-							index++;
+					if (this.status === 403) {
+						index++;
+
+						if (index < _this.apiKeys.length - 1) {
 							xhrSend(index);
+						} else {
+							complete = true;
+							return;
 						}
 					}
-
-					return;
 				}
 			};
 
-			url =
-				'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo&q=' +
-				query +
-				'&safe=high&searchType=image&key=' +
-				_this.apiKeys[index];
-
-			xhr.open('GET', url, true);
-			xhr.send();
+			if (!complete) {
+				xhr.open('GET', url, true);
+				xhr.send();
+			}
 		};
 
+	/*
+	* Do not make multiple calls due to API limit restriction
+	* Access cached response if available in webstorage or cookie
+	*/
 	if (
 		typeof cachedJsonStr !== 'undefined' &&
 		cachedJsonStr !== null &&
