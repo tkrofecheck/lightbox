@@ -71,21 +71,29 @@
         </div>
 
         <div id="container">
-            <label for="gallerySelector">Halloween Galleries</label>
-            <select name="gallerySelector" onchange="Gallery.render(this.value)">
-                <option value="" selected="selected">Select a Gallery</option>
-                <option value="custom">Custom Search</option>
-                <option value="halloween+pumpkin">Pumpkin</option>
-                <option value="halloween+witch">Witch</option>
-                <option value="halloween+ghost">Ghost</option>
-                <option value="halloween+scarecrow">Scarecrow</option>
-                <option value="halloween+clown">Clown</option>
-            </select>
-            <form name="customSearch" onsubmit="Gallery.render(this)">
-                <input type="text" name="search" placeholder="Image Search"/>
-                <input type="submit" name="submit" value="Submit"/>
-            </form>
+            Image Search
             <button class="clear-storage">Clear Search History</button>
+            <div class="search-type">
+                <div class="preset">
+                    <label for="gallerySelector">Halloween Galleries</label>
+                    <select name="gallerySelector" onchange="Gallery.preset(this.value)">
+                        <option value="" selected="selected">Select a Gallery</option>
+                        <option value="">-------------------------</option>
+                        <option value="halloween+pumpkin">Pumpkin</option>
+                        <option value="halloween+witch">Witch</option>
+                        <option value="halloween+ghost">Ghost</option>
+                        <option value="halloween+scarecrow">Scarecrow</option>
+                        <option value="halloween+clown">Clown</option>
+                        <option value="">-------------------------</option>
+                    </select>
+                </div>
+                <div class="custom">
+                    <form name="customSearch" onsubmit="Gallery.custom(this)">
+                        <input type="text" name="search" placeholder="Image Search" />                
+                        <input type="submit" value="Search" />
+                    </form>
+                </div>
+            </div>
             <div id="gallery"></div>
         </div>
         <script type="text/javascript">
