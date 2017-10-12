@@ -7,7 +7,7 @@ function Lightbox(url) {
 	]; // each key allows 100 searches per day
 	this.responseJson = null;
 	this.photos = [];
-	this.searchPrefix = 'lbsearch_';
+	this.cacheSearchPrefix = 'lbsearch_';
 }
 
 Lightbox.prototype.useWebStorage = function() {
@@ -46,7 +46,7 @@ Lightbox.prototype.getCookie = function(cname) {
 
 Lightbox.prototype.getData = function(query) {
 	var _this = this,
-		cacheKey = _this.searchPrefix + query,
+		cacheKey = _this.cacheSearchPrefix + query,
 		useWebStorage = _this.useWebStorage(),
 		cachedJsonStr =
 			sessionStorage.getItem(cacheKey) ||
@@ -122,17 +122,19 @@ Lightbox.prototype.init = function() {
 	this.bindEvents();
 };
 
-Lightbox.prototype.render = function(searchQuery) {
-	if (typeof searchQuery !== 'undefined' && searchQuery !== 'custom') {
-		this.getData(searchQuery);
+Lightbox.prototype.preset = function(search) {
+	if (search !== '') {
+		this.getData(search);
 	}
+};
 
-	return;
+Lightbox.prototype.custom = function(search) {
+	console.log('search', search);
 };
 
 Lightbox.prototype.ready = function() {
 	// Data is ready, continue...
-	this.createDOM();
+	this.render();
 };
 
 Lightbox.prototype.error = function(error) {
@@ -149,7 +151,7 @@ Lightbox.prototype.error = function(error) {
 		'</div>';
 };
 
-Lightbox.prototype.createDOM = function() {
+Lightbox.prototype.render = function() {
 	var _this = this,
 		gallery = document.getElementById('gallery'),
 		images = this.responseJson.items,
@@ -192,14 +194,15 @@ Lightbox.prototype.createDOM = function() {
 Lightbox.prototype.bindEvents = function() {
 	var _this = this,
 		useWebStorage = _this.useWebStorage,
-		clearStorage;
+		clearStorage,
+		customSearch = document.querySelector('[name=customSearch]');
 
 	clearStorage = document.querySelector('.clear-storage');
 
 	clearStorage.addEventListener('click', function() {
 		console.log('clear search history');
 		var i = sessionStorage.length,
-			re = new RegExp(_this.searchPrefix);
+			re = new RegExp(_this.cacheSearchPrefix);
 
 		while (i--) {
 			var key = sessionStorage.key(i);
@@ -210,6 +213,15 @@ Lightbox.prototype.bindEvents = function() {
 					_this.setCookie(key, -1);
 				}
 			}
+		}
+	});
+
+	customSearch.addEventListener('submit', function(e) {
+		e.preventDefault(); // stop form from refreshing page on submit
+		var search = e.target[0].value; // text input value
+
+		if (search !== '') {
+			_this.getData(search);
 		}
 	});
 };
