@@ -7,7 +7,7 @@ html, body, div, span {
 #container {
     position: relative;
     box-sizing: border-box;
-    margin: 20px;
+    margin: 10px;
     font-family: 'Helvetica', sans-serif;
 }
 
@@ -34,13 +34,13 @@ html, body, div, span {
 }
 
 .gallery .thumb-container img {
-    max-width: 120px;
+    max-width: 100px;
     max-height: 125px
 }
 
 .gallery, .search {
     width: auto;
-    padding: 20px;
+    padding: 10px;
 }
 
 .search h1 {
@@ -99,8 +99,26 @@ html, body, div, span {
 }
 
 @media (min-width: 768px) {
+    #container {
+        margin: 20px;
+    }
+
+    .gallery, .search {
+        padding: 20px;
+    }
+    
     .gallery .thumb-container {
         width: 33.3%;
+    }
+    
+    .gallery .thumb-container img {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .gallery .thumb-container {
+        width: 25%;
     }
     
     .gallery .thumb-container img {
