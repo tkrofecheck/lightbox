@@ -14,19 +14,29 @@ html, body, div, span {
 .gallery {
     position: relative;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.gallery::after{
+    content: '';
 }
 
 .gallery .thumb-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50%;
     height: 140px;
     outline: 1px solid #dddddd;
     background-color: #ffffff;
     transition: background .2s ease-in-out;
+}
+
+.gallery::after,
+.gallery .thumb-container,
+.gallery .thumb-container::after {
+    width: 50%;
 }
 
 .gallery .thumb-container:hover {
@@ -38,9 +48,8 @@ html, body, div, span {
     max-height: 125px
 }
 
-.gallery, .search {
+.search {
     width: auto;
-    padding: 10px;
 }
 
 .search h1 {
@@ -98,7 +107,7 @@ html, body, div, span {
     height: 40px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
     #container {
         margin: 20px;
     }
@@ -107,8 +116,10 @@ html, body, div, span {
         padding: 20px;
     }
     
-    .gallery .thumb-container {
-        width: 33.3%;
+    .gallery::after,
+    .gallery .thumb-container,
+    .gallery .thumb-container::after {
+        width: 33.33%;
     }
     
     .gallery .thumb-container img {
@@ -117,11 +128,25 @@ html, body, div, span {
 }
 
 @media (min-width: 1024px) {
-    .gallery .thumb-container {
+    .gallery::after,
+    .gallery .thumb-container,
+    .gallery .thumb-container::after {
         width: 25%;
     }
-    
-    .gallery .thumb-container img {
-        max-width: 100%;
+}
+
+@media (min-width: 1240px) {
+    .gallery::after,
+    .gallery .thumb-container,
+    .gallery .thumb-container::after {
+        width: 20%;
+    }
+}
+
+@media (min-width: 1440px) {
+    .gallery::after,
+    .gallery .thumb-container,
+    .gallery .thumb-container::after {
+        width: 14.285%;
     }
 }
