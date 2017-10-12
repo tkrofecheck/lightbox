@@ -16,7 +16,7 @@ Lightbox.prototype.useWebStorage = function() {
 		sessionStorage.removeItem('test');
 		return true;
 	} catch (e) {
-		console.log('web storage not supported');
+		console.log('web storage not supported, using cookies instead');
 		return false;
 	}
 };
@@ -138,7 +138,7 @@ Lightbox.prototype.ready = function() {
 };
 
 Lightbox.prototype.error = function(error) {
-	var gallery = document.getElementById('gallery');
+	var gallery = document.querySelector('.gallery');
 
 	gallery.innerHTML =
 		'<div class="error">' +
@@ -153,7 +153,7 @@ Lightbox.prototype.error = function(error) {
 
 Lightbox.prototype.render = function() {
 	var _this = this,
-		gallery = document.getElementById('gallery'),
+		gallery = document.querySelector('.gallery'),
 		images = this.responseJson.items,
 		div,
 		photo,

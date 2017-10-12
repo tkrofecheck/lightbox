@@ -65,36 +65,43 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div class="connection">
-            <span class="dot"></span>
-            <span class="message"></span>
-        </div>
-
         <div id="container">
-            Image Search
-            <button class="clear-storage">Clear Search History</button>
-            <div class="search-type">
-                <div class="preset">
-                    <label for="gallerySelector">Halloween Galleries</label>
-                    <select name="gallerySelector" onchange="Gallery.preset(this.value)">
-                        <option value="" selected="selected">Select a Gallery</option>
-                        <option value="">-------------------------</option>
-                        <option value="halloween+pumpkin">Pumpkin</option>
-                        <option value="halloween+witch">Witch</option>
-                        <option value="halloween+ghost">Ghost</option>
-                        <option value="halloween+scarecrow">Scarecrow</option>
-                        <option value="halloween+clown">Clown</option>
-                        <option value="">-------------------------</option>
-                    </select>
+            <div class="search">
+                <div class="connection">
+                    <span class="dot"></span>
+                    <span class="message"></span>
                 </div>
-                <div class="custom">
-                    <form name="customSearch" onsubmit="Gallery.custom(this)">
-                        <input type="text" name="search" placeholder="Image Search" />                
-                        <input type="submit" value="Search" />
-                    </form>
+
+                <h1>Image Search</h1>
+
+                <div class="search-type">
+                    <div class="types">
+                        <div>Preset</div>
+                        <div>Custom</div>
+                    </div>
+                    <div class="preset">
+                        <label for="gallerySelector">Halloween Galleries</label>
+                        <select name="gallerySelector" onchange="Gallery.preset(this.value)">
+                            <option value="" selected="selected">Select a Gallery</option>
+                            <option value="">-------------------------</option>
+                            <option value="halloween+pumpkin">Pumpkin</option>
+                            <option value="halloween+witch">Witch</option>
+                            <option value="halloween+ghost">Ghost</option>
+                            <option value="halloween+scarecrow">Scarecrow</option>
+                            <option value="halloween+clown">Clown</option>
+                            <option value="">-------------------------</option>
+                        </select>
+                    </div>
+                    <div class="custom">
+                        <form name="customSearch" onsubmit="Gallery.custom(this)">
+                            <input type="text" name="search" placeholder="Image Search" />                
+                            <input type="submit" value="Search" />
+                        </form>
+                    </div>
+                    <button class="clear-storage">Clear Search History</button>
                 </div>
             </div>
-            <div id="gallery"></div>
+            <div class="gallery"></div>
         </div>
         <script type="text/javascript">
             //Monitor network connection
