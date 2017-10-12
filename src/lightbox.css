@@ -150,11 +150,3 @@ html, body, div, span {
         width: 20%;
     }
 }
-
-@media (min-width: 1440px) {
-    .gallery::after,
-    .gallery .thumb-container,
-    .gallery .thumb-container::after {
-        width: 14.285%;
-    }
-}
