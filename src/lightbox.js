@@ -367,11 +367,11 @@ Lightbox.prototype.bind_modalEvents = function() {
 					}
 				},
 				loadInterval = setInterval(function() {
-					desc.innerHTML = '. ' + desc.innerHTML + ' .';
+					desc.innerHTML = '&#8226; ' + desc.innerHTML + ' &#8226;';
 				}, 1000);
 
 			_this.addClass(photo, 'load-spinner');
-			desc.innerHTML = '.loading.';
+			desc.innerHTML = '&#8226; loading &#8226;';
 			fadeNextImage();
 		},
 		close_clickHandler = function(e) {
@@ -396,4 +396,8 @@ Lightbox.prototype.bind_modalEvents = function() {
 	leftNav.addEventListener('click', leftNav_clickHandler);
 	rightNav.addEventListener('click', rightNav_clickHandler);
 	photo.addEventListener('click', rightNav_clickHandler);
+	desc.addEventListener('click', function(e) {
+		// preventing the next image to load when clicking description
+		e.stopPropagation();
+	});
 };
