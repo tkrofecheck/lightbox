@@ -1,3 +1,5 @@
+/* CSS Styles - Mobile First */
+
 html, body, div, span {
     margin: 0;
     padding: 0;
@@ -177,16 +179,14 @@ html, body, div, span {
 
 .modal .close {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: 40px;
+    top: 0;
+    right: 4%;
 }
 
 .modal .close::after {
     content: '\2715';
     color: rgba(255,255,255,.6);
+    font-size: 3em;
 }
 
 .modal .description {
@@ -211,7 +211,7 @@ html, body, div, span {
 
 .modal .nav .left, .modal .nav .right {
     position: absolute;
-    font-size: 40px;
+    font-size: 2em;
     transition: color .2s ease-in-out;
     color: transparent;
     top: 50%;
@@ -241,6 +241,9 @@ html, body, div, span {
     opacity: 1;
 }
 
+
+/* MEDIA QUERIES */
+
 @media (min-width: 400px) {
     .lb-gallery .thumb-container img {
         max-width: 100%;
@@ -263,7 +266,13 @@ html, body, div, span {
     }
 
     .modal .nav .left, .modal .nav .right {
-        font-size: 50px;
+        font-size: 3em;
+    }
+}
+
+@media (min-width: 768px) {
+    .modal .nav .left, .modal .nav .right {
+        font-size: 5em;
     }
 }
 
@@ -285,10 +294,6 @@ html, body, div, span {
 
     .modal .close:hover {
         color: #ffffff;
-    }
-
-    .modal .nav .left, .modal .nav .right {
-        font-size: 125px;
     }
 
     .modal .nav .left:hover, .modal .nav .right:hover {
