@@ -80,9 +80,9 @@
                         <div>Custom</div>
                     </div>
                     <div class="preset">
-                        <label for="gallerySelector">Halloween Galleries</label>
+                        <label for="gallerySelector">Select a Gallery</label>
                         <select name="gallerySelector" onchange="Gallery.preset(this.value)">
-                            <option value="" selected="selected">Select a Gallery</option>
+                            <option value="" selected="selected">Halloween</option>
                             <option value="">-------------------------</option>
                             <option value="halloween+pumpkin">Pumpkin</option>
                             <option value="halloween+witch">Witch</option>
@@ -91,8 +91,18 @@
                             <option value="halloween+clown">Clown</option>
                             <option value="">-------------------------</option>
                         </select>
+                        <select name="gallerySelector" onchange="Gallery.preset(this.value)">
+                            <option value="" selected="selected">New York City</option>
+                            <option value="">-------------------------</option>
+                            <option value="nyc+statue+of+liberty">Statue of Liberty</option>
+                            <option value="nyc+times+square">Times Square</option>
+                            <option value="nyc+empire+state+building">Empire State Building</option>
+                            <option value="nyc+central+park">Central Park</option>
+                            <option value="nyc+city+hall">City Hall</option>
+                            <option value="">-------------------------</option>
+                        </select>
                     </div>
-                    <div class="custom">
+                    <div class="custom hide">
                         <form name="customSearch" onsubmit="Gallery.custom(this)">
                             <input type="text" name="search" placeholder="Image Search" />                
                             <input type="submit" value="Search" />
