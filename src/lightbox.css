@@ -164,7 +164,7 @@ html, body, div, span {
     max-height: 80%;
     left: 50%;
     top: 50%;
-    transition: opacity .2s ease-in-out;
+    transition: opacity .4s ease-in-out;
     transform: translate(-50%, -50%);
     transform-style: preserve-3d;
 }
