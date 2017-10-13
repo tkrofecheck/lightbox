@@ -347,12 +347,27 @@ Lightbox.prototype.bind_modalEvents = function() {
 		leftNav = modal.querySelector('.nav .left'),
 		rightNav = modal.querySelector('.nav .right'),
 		photo = modal.querySelector('.photo-container'),
+		image = modal.querySelector('img'),
+		desc = modal.querySelector('.description'),
 		index = parseInt(modal.getAttribute('data-index')),
 		updateImage = function(i) {
-			modal.querySelector('img').setAttribute('src', _this.photos[i].src);
+			var fadeNextImage = function() {
+				_this.addClass(image, 'transparent');
+				desc.innerHTML = 'loading...';
+				image.setAttribute('src', _this.photos[i].src);
 
-			modal.querySelector('.description').innerHTML =
-				_this.photos[i].description;
+				if (!image.complete || image.naturalHeight === 0) {
+					window.requestAnimationFrame(fadeNextImage);
+					return;
+				} else {
+					_this.removeClass(photo, 'load-spinner');
+					_this.removeClass(image, 'transparent');
+					desc.innerHTML = _this.photos[i].description;
+				}
+			};
+
+			_this.addClass(photo, 'load-spinner');
+			fadeNextImage();
 		},
 		close_clickHandler = function(e) {
 			_this.removeClass(_this.body, 'no-scroll');
