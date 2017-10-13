@@ -301,6 +301,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 	}
 
 	var _this = this,
+		body = document.getElementsByTagName('body')[0],
 		container = document.getElementById('container'),
 		modal = document.createElement('div'),
 		showModal = function() {
@@ -311,6 +312,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 				return;
 			} else {
 				_this.removeClass(thumbEl, 'load-spinner');
+				_this.addClass(body, 'no-scroll');
 				_this.addClass(modal, 'show');
 				_this.bind_modalEvents();
 			}
@@ -340,6 +342,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 
 Lightbox.prototype.bind_modalEvents = function() {
 	var _this = this,
+		body = document.getElementsByTagName('body')[0],
 		modal = document.querySelector('.modal'),
 		close = modal.querySelector('.close'),
 		leftNav = modal.querySelector('.nav .left'),
@@ -353,6 +356,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 				_this.photos[i].description;
 		},
 		close_clickHandler = function(e) {
+			_this.removeClass(body, 'no-scroll');
 			modal.remove();
 		},
 		leftNav_clickHandler = function(e) {

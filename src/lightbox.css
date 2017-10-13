@@ -98,6 +98,10 @@ html, body, div, span {
     height: 60px;
 }
 
+.no-scroll {
+    overflow: hidden;
+}
+
 .search {
     width: auto;
 }
