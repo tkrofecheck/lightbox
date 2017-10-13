@@ -366,6 +366,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 		image = modal.querySelector('img'),
 		desc = modal.querySelector('.description'),
 		index = parseInt(modal.getAttribute('data-index')),
+		loadingDots = 1,
 		updateImage = function(i) {
 			var fadeNextImage = function() {
 					_this.addClass(image, 'transparent');
@@ -383,8 +384,15 @@ Lightbox.prototype.bind_modalEvents = function() {
 						desc.innerHTML = _this.photos[i].description;
 					}
 				},
-				loadInterval = setInterval(function() {
-					desc.innerHTML = '&#8226; ' + desc.innerHTML + ' &#8226;';
+				loadInterval = setInterval(function(i) {
+					if (loadingDots < 5) {
+						loadingDots++;
+						desc.innerHTML =
+							'&#8226; ' + desc.innerHTML + ' &#8226;';
+					} else {
+						loadingDots = 1;
+						desc.innerHTML = '&#8226; loading &#8226;';
+					}
 				}, 1000);
 
 			_this.addClass(photo, 'load-spinner');
