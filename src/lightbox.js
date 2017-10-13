@@ -178,35 +178,49 @@ Lightbox.prototype.ready = function() {
 Lightbox.prototype.render = function() {
 	var _this = this,
 		images = _this.responseJson.items,
-		winWidth = document.documentElement.clientWidth,
-		div,
-		photo,
 		thumbnails,
-		thumb;
+		thumb,
+		thumbLoaded = function(container) {
+			var image = container.querySelector('img');
 
-	function createDiv(index) {
-		div = document.createElement('div');
+			if (!image.complete || image.naturalHeight === 0) {
+				window.requestAnimationFrame(function() {
+					thumbLoaded(container);
+				});
+				return;
+			} else {
+				_this.removeClass(container, 'load-spinner');
+				_this.removeClass(container, 'dark');
+			}
+		},
+		createDiv = function(index) {
+			var div = document.createElement('div'),
+				photo;
 
-		if (index >= 0) {
-			div.setAttribute('class', 'thumb-container');
+			if (index >= 0) {
+				_this.addClass(div, 'thumb-container');
+				_this.addClass(div, 'load-spinner');
+				_this.addClass(div, 'dark');
 
-			photo = document.createElement('img');
-			photo.setAttribute('src', images[index].image.thumbnailLink);
-			photo.setAttribute('data-src', images[index].link);
+				photo = document.createElement('img');
+				photo.setAttribute('src', images[index].image.thumbnailLink);
+				photo.setAttribute('data-src', images[index].link);
 
-			_this.photos.push({
-				src: images[index].link,
-				description: images[index].title,
-				ref: images[index].displayLink
-			}); // used later for navigating modal photos
+				div.appendChild(photo);
+				_this.gallery.appendChild(div);
+				thumbLoaded(div);
 
-			div.appendChild(photo);
-		} else {
-			div.setAttribute('class', 'thumb-container empty');
-		}
-
-		_this.gallery.appendChild(div);
-	}
+				_this.photos.push({
+					src: images[index].link,
+					description: images[index].title,
+					ref: images[index].displayLink
+				}); // used later for navigating modal photos
+			} else {
+				_this.addClass(div, 'thumb-container');
+				_this.addClass(div, 'empty');
+				_this.gallery.appendChild(div);
+			}
+		};
 
 	_this.gallery.innerHTML = ''; // clear gallery to display new search
 
@@ -219,8 +233,8 @@ Lightbox.prototype.render = function() {
 	* Create an addition 2 containers to help with
 	* flexbox alignment
 	*/
-	createDiv();
-	createDiv();
+	createDiv(-1);
+	createDiv(-1);
 
 	// Bind events for dynamic elements
 	thumbnails = _this.gallery.querySelectorAll('.thumb-container:not(.empty)');
@@ -229,6 +243,7 @@ Lightbox.prototype.render = function() {
 		thumbnails[i].addEventListener('click', function(e) {
 			e.stopPropagation();
 			_this.addClass(this, 'load-spinner');
+			_this.addClass(this, 'light');
 			_this.Modal(this, i);
 		});
 	}
@@ -312,6 +327,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 				return;
 			} else {
 				_this.removeClass(thumbEl, 'load-spinner');
+				_this.removeClass(thumbEl, 'light');
 				_this.addClass(_this.body, 'no-scroll');
 				_this.addClass(modal, 'show');
 				_this.bind_modalEvents();
@@ -362,6 +378,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 					} else {
 						clearInterval(loadInterval);
 						_this.removeClass(photo, 'load-spinner');
+						_this.removeClass(photo, 'light');
 						_this.removeClass(image, 'transparent');
 						desc.innerHTML = _this.photos[i].description;
 					}
@@ -371,6 +388,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 				}, 1000);
 
 			_this.addClass(photo, 'load-spinner');
+			_this.addClass(photo, 'light');
 			desc.innerHTML = '&#8226; loading &#8226;';
 			fadeNextImage();
 		},
