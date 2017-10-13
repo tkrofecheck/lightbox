@@ -44,12 +44,8 @@ html, body, div, span {
     width: 50%;
 }
 
-.lb-gallery .thumb-container:hover {
-    outline: 1px solid red;
-    outline-offset: -10px;
-}
-
 .lb-gallery .thumb-container.empty {
+    display: none;
     visibility: hidden;
 }
 
@@ -190,10 +186,7 @@ html, body, div, span {
 
 .modal .close::after {
     content: '\2715';
-}
-
-.modal .close:hover {
-    color: #ffffff;
+    color: rgba(255,255,255,.6);
 }
 
 .modal .description {
@@ -218,16 +211,14 @@ html, body, div, span {
 
 .modal .nav .left, .modal .nav .right {
     position: absolute;
-    font-size: 125px;
+    font-size: 40px;
     transition: color .2s ease-in-out;
     color: transparent;
     top: 50%;
+    color: rgba(255,255,255,.3);
+    background-color: rgba(0,0,0,0.2);
     transform: translate(0%, -50%);
     transform-style: preserve-3d;
-}
-
-.modal .nav .left:hover, .modal .nav .right:hover {
-    color: #ffffff;
 }
 
 .modal .nav .left {
@@ -270,6 +261,10 @@ html, body, div, span {
     .lb-gallery .thumb-container::after {
         width: 33.33%;
     }
+
+    .modal .nav .left, .modal .nav .right {
+        font-size: 50px;
+    }
 }
 
 @media (min-width: 1024px) {
@@ -277,6 +272,27 @@ html, body, div, span {
     .lb-gallery .thumb-container,
     .lb-gallery .thumb-container::after {
         width: 25%;
+    }
+
+    .lb-gallery .thumb-container.empty {
+        display: block;
+    }
+
+    .lb-gallery .thumb-container:hover {
+        outline: 1px solid red;
+        outline-offset: -10px;
+    }
+
+    .modal .close:hover {
+        color: #ffffff;
+    }
+
+    .modal .nav .left, .modal .nav .right {
+        font-size: 125px;
+    }
+
+    .modal .nav .left:hover, .modal .nav .right:hover {
+        color: #ffffff;
     }
 }
 
