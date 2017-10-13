@@ -324,7 +324,9 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 		'<img src="' +
 		thumbEl.querySelector('img').getAttribute('data-src') +
 		'">' +
-		'<div class="description"></div>' +
+		'<div class="description">' +
+		_this.photos[index].description +
+		'</div>' +
 		'</div>' +
 		'<div class="nav">' +
 		'<span class="left"></span>' +
