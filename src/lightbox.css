@@ -190,7 +190,7 @@ html, body, div, span {
     position: absolute;
     font-size: 125px;
     transition: color .2s ease-in-out;
-    color: #5c5c5c;
+    color: transparent;
     top: 50%;
     transform: translate(0%, -50%);
     transform-style: preserve-3d;
