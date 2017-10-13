@@ -165,7 +165,7 @@ Lightbox.prototype.custom = function(search) {
 		console.log('Cannot search for ' + search + ' at this time');
 		return;
 	}
-	
+
 	console.log('search', search);
 };
 
@@ -342,6 +342,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 		close = modal.querySelector('.close'),
 		leftNav = modal.querySelector('.nav .left'),
 		rightNav = modal.querySelector('.nav .right'),
+		photo = modal.querySelector('.photo-container'),
 		index = parseInt(modal.getAttribute('data-index')),
 		updateImage = function(i) {
 			modal.querySelector('img').setAttribute('src', _this.photos[i].src);
@@ -349,23 +350,25 @@ Lightbox.prototype.bind_modalEvents = function() {
 			modal.querySelector('.description').innerHTML =
 				_this.photos[i].description;
 		},
+		close_clickHandler = function(e) {
+			modal.remove();
+		},
+		leftNav_clickHandler = function(e) {
+			e.stopPropagation();
+			position = _this.photos.length - 1;
+			index = index === 0 ? position : index - 1;
+			updateImage(index);
+		},
+		rightNav_clickHandler = function(e) {
+			e.stopPropagation();
+			position = _this.photos.length - 1;
+			index = index === position ? 0 : index + 1;
+			updateImage(index);
+		},
 		position;
 
-	leftNav.addEventListener('click', function(e) {
-		e.stopPropagation();
-		position = _this.photos.length - 1;
-		index = index === 0 ? position : index - 1;
-		updateImage(index);
-	});
-
-	rightNav.addEventListener('click', function(e) {
-		e.stopPropagation();
-		position = _this.photos.length - 1;
-		index = index === position ? 0 : index + 1;
-		updateImage(index);
-	});
-
-	document.addEventListener('click', function() {
-		modal.remove();
-	});
+	close.addEventListener('click', close_clickHandler);
+	leftNav.addEventListener('click', leftNav_clickHandler);
+	rightNav.addEventListener('click', rightNav_clickHandler);
+	photo.addEventListener('click', rightNav_clickHandler);
 };
