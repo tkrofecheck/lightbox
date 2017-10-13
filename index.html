@@ -80,7 +80,7 @@
                         <div>Custom</div>
                     </div>
                     <div class="preset">
-                        <label for="gallerySelector">Select a Gallery</label>
+                        <label for="gallerySelector">Gallery 1</label>
                         <select name="gallerySelector" onchange="Gallery.preset(this.value)">
                             <option value="" selected="selected">Halloween</option>
                             <option value="">-------------------------</option>
@@ -91,7 +91,8 @@
                             <option value="halloween+clown">Clown</option>
                             <option value="">-------------------------</option>
                         </select>
-                        <select name="gallerySelector" onchange="Gallery.preset(this.value)">
+                        <label for="gallerySelector2">Gallery 2</label>
+                        <select name="gallerySelector2" onchange="Gallery2.preset(this.value)">
                             <option value="" selected="selected">New York City</option>
                             <option value="">-------------------------</option>
                             <option value="nyc+statue+of+liberty">Statue of Liberty</option>
@@ -99,6 +100,17 @@
                             <option value="nyc+empire+state+building">Empire State Building</option>
                             <option value="nyc+central+park">Central Park</option>
                             <option value="nyc+city+hall">City Hall</option>
+                            <option value="">-------------------------</option>
+                        </select>
+                        <label for="gallerySelector3">Gallery 3</label>
+                        <select name="gallerySelector3" onchange="Gallery3.preset(this.value)">
+                            <option value="" selected="selected">Food</option>
+                            <option value="">-------------------------</option>
+                            <option value="food+pizza">Pizza</option>
+                            <option value="food+cheeseburger">Cheeseburger</option>
+                            <option value="food+salad">Salad</option>
+                            <option value="food+fruit">Fruit</option>
+                            <option value="food+bread">Bread</option>
                             <option value="">-------------------------</option>
                         </select>
                     </div>
@@ -112,6 +124,7 @@
                 </div>
             </div>
             <div class="gallery"></div>
+            <div class="gallery2"></div>
         </div>
         <script type="text/javascript">
             //Monitor network connection
@@ -144,11 +157,31 @@
 
         <script src="./src/lightbox.js"></script>
         <script type="text/javascript">
-            /* Use the same instance in the above drop-down selector
+            /* Use the same instance name (set below) in the above drop-down selector
             *  -- e.g. Gallery.render(this.value)
+            * NOTE: Multiple instances are supported, but DOM must be updated with
+            *       second instance name and new instance must use correct selector
             */
-            var Gallery = new Lightbox();
-            Gallery.init();
+            var apiKeys = [
+                    'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc',
+                    'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
+                    'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
+                ],
+                Gallery,
+                Gallery2,
+                Gallery3;
+            
+            // Instance 1
+            Gallery = new Lightbox(apiKeys);
+            Gallery.init('.gallery');
+
+            // Instance 2 (only available using 'Preset' dropdowns at this time)
+            Gallery2 = new Lightbox(apiKeys);
+            Gallery2.init('.gallery2');
+
+            // Instance 3 (missing HTML element - error displayed in console)
+            Gallery3 = new Lightbox(apiKeys);
+            Gallery3.init('.gallery3');
         </script>
     </body>
 </html>

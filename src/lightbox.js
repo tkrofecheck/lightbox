@@ -1,13 +1,11 @@
 /* START: Cookie set/get from W3schools */
-function Lightbox(url) {
-	this.apiKeys = [
-		'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc',
-		'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
-		'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
-	]; // each key allows 100 searches per day
+function Lightbox(apiKeys) {
+	this.apiKeys = typeof apiKeys === 'string' ? apiKeys.split(',') : apiKeys;
+	this.gallery = null;
 	this.responseJson = null;
 	this.photos = [];
 	this.cacheSearchPrefix = 'lbsearch_';
+	this.doNotRender = false;
 }
 
 Lightbox.prototype.useWebStorage = function() {
@@ -118,17 +116,56 @@ Lightbox.prototype.getData = function(query) {
 	}
 };
 
-Lightbox.prototype.init = function() {
+Lightbox.prototype.init = function(selector) {
+	var galleryDiv;
+
+	if (typeof selector === 'undefined' || selector === '') {
+		console.log('Selector required to initialize Lightbox.');
+		return;
+	}
+
+	this.gallery = document.querySelector(selector);
+
+	if (typeof this.gallery === 'undefined' || this.gallery === null) {
+		this.doNotRender = true;
+
+		throw Error(
+			'DOMelement with selector, "' +
+				selector +
+				'" missing in your HTML document.'
+		);
+		return;
+	}
+
+	this.addClass(this.gallery, 'lb-gallery');
 	this.bindEvents();
 };
 
+Lightbox.prototype.galleryLoad = function(display) {
+	if (display) {
+		_this.addClass(this.gallery, 'load-spinner'); // display loading load-spinner
+	} else {
+		_this.removeClass(this.gallery, 'load-spinner'); // display loading load-spinner
+	}
+};
+
 Lightbox.prototype.preset = function(search) {
+	if (this.doNotRender) {
+		console.log('Cannot search for ' + search + ' at this time');
+		return;
+	}
+
 	if (search !== '') {
 		this.getData(search);
 	}
 };
 
 Lightbox.prototype.custom = function(search) {
+	if (this.doNotRender) {
+		console.log('Cannot search for ' + search + ' at this time');
+		return;
+	}
+	
 	console.log('search', search);
 };
 
@@ -137,23 +174,8 @@ Lightbox.prototype.ready = function() {
 	this.render();
 };
 
-Lightbox.prototype.error = function(error) {
-	var gallery = document.querySelector('.gallery');
-
-	gallery.innerHTML =
-		'<div class="error">' +
-		'<div class="reason">' +
-		error.reason +
-		'</div>' +
-		'<div class="message">' +
-		error.message +
-		'</div>' +
-		'</div>';
-};
-
 Lightbox.prototype.render = function() {
 	var _this = this,
-		gallery = document.querySelector('.gallery'),
 		images = _this.responseJson.items,
 		winWidth = document.documentElement.clientWidth,
 		div,
@@ -164,7 +186,6 @@ Lightbox.prototype.render = function() {
 	function createDiv(index) {
 		div = document.createElement('div');
 
-		console.log(index);
 		if (index >= 0) {
 			div.setAttribute('class', 'thumb-container');
 
@@ -183,10 +204,10 @@ Lightbox.prototype.render = function() {
 			div.setAttribute('class', 'thumb-container empty');
 		}
 
-		gallery.appendChild(div);
+		_this.gallery.appendChild(div);
 	}
 
-	gallery.innerHTML = ''; // clear gallery to display new search
+	_this.gallery.innerHTML = ''; // clear gallery to display new search
 
 	for (let i = 0; i < images.length; i++) {
 		createDiv(i);
@@ -201,13 +222,41 @@ Lightbox.prototype.render = function() {
 	createDiv();
 
 	// Bind events for dynamic elements
-	thumbnails = gallery.querySelectorAll('.thumb-container:not(.empty)');
+	thumbnails = _this.gallery.querySelectorAll('.thumb-container:not(.empty)');
 
 	for (let i = 0; i < thumbnails.length; i++) {
 		thumbnails[i].addEventListener('click', function(e) {
 			e.stopPropagation();
+			_this.addClass(this, 'load-spinner');
 			_this.Modal(this, i);
 		});
+	}
+};
+
+Lightbox.prototype.hasClass = function(el, className) {
+	if (el.classList) {
+		return el.classList.contains(className);
+	} else {
+		return !!el.className.match(
+			new RegExp('(\\s|^)' + className + '(\\s|$)')
+		);
+	}
+};
+
+Lightbox.prototype.addClass = function(el, className) {
+	if (el.classList) {
+		el.classList.add(className);
+	} else if (!hasClass(el, className)) {
+		el.className += ' ' + className;
+	}
+};
+
+Lightbox.prototype.removeClass = function(el, className) {
+	if (el.classList) {
+		el.classList.remove(className);
+	} else if (hasClass(el, className)) {
+		var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+		el.className = el.className.replace(reg, ' ');
 	}
 };
 
@@ -261,12 +310,13 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 				window.requestAnimationFrame(showModal);
 				return;
 			} else {
-				modal.className += ' show';
+				_this.removeClass(thumbEl, 'load-spinner');
+				_this.addClass(modal, 'show');
 				_this.bind_modalEvents();
 			}
 		};
 
-	modal.setAttribute('class', 'modal');
+	_this.addClass(modal, 'modal');
 	modal.setAttribute('data-index', index);
 	modal.innerHTML =
 		'<div class="close">&times;</div>' +
