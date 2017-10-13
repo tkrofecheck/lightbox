@@ -366,8 +366,10 @@ Lightbox.prototype.bind_modalEvents = function() {
 		image = modal.querySelector('img'),
 		desc = modal.querySelector('.description'),
 		index = parseInt(modal.getAttribute('data-index')),
-		loadingDots = 1,
+		loadingDots,
 		updateImage = function(i) {
+			loadingDots = 1;
+			
 			var fadeNextImage = function() {
 					_this.addClass(image, 'transparent');
 
