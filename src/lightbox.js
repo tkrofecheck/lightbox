@@ -307,7 +307,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 		showModal = function() {
 			var photo = modal.querySelector('img');
 
-			if (!photo.offsetWidth) {
+			if (!photo.complete || photo.naturalHeight === 0) {
 				window.requestAnimationFrame(showModal);
 				return;
 			} else {
