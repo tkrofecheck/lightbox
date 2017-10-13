@@ -1,6 +1,7 @@
 /* START: Cookie set/get from W3schools */
 function Lightbox(apiKeys) {
 	this.apiKeys = typeof apiKeys === 'string' ? apiKeys.split(',') : apiKeys;
+	this.body = document.getElementsByTagName('body')[0];
 	this.gallery = null;
 	this.responseJson = null;
 	this.photos = [];
@@ -301,7 +302,6 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 	}
 
 	var _this = this,
-		body = document.getElementsByTagName('body')[0],
 		container = document.getElementById('container'),
 		modal = document.createElement('div'),
 		showModal = function() {
@@ -312,7 +312,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 				return;
 			} else {
 				_this.removeClass(thumbEl, 'load-spinner');
-				_this.addClass(body, 'no-scroll');
+				_this.addClass(_this.body, 'no-scroll');
 				_this.addClass(modal, 'show');
 				_this.bind_modalEvents();
 			}
@@ -342,7 +342,6 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 
 Lightbox.prototype.bind_modalEvents = function() {
 	var _this = this,
-		body = document.getElementsByTagName('body')[0],
 		modal = document.querySelector('.modal'),
 		close = modal.querySelector('.close'),
 		leftNav = modal.querySelector('.nav .left'),
@@ -356,7 +355,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 				_this.photos[i].description;
 		},
 		close_clickHandler = function(e) {
-			_this.removeClass(body, 'no-scroll');
+			_this.removeClass(_this.body, 'no-scroll');
 			modal.remove();
 		},
 		leftNav_clickHandler = function(e) {
