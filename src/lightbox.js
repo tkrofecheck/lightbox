@@ -352,21 +352,26 @@ Lightbox.prototype.bind_modalEvents = function() {
 		index = parseInt(modal.getAttribute('data-index')),
 		updateImage = function(i) {
 			var fadeNextImage = function() {
-				_this.addClass(image, 'transparent');
-				desc.innerHTML = 'loading...';
-				image.setAttribute('src', _this.photos[i].src);
+					_this.addClass(image, 'transparent');
 
-				if (!image.complete || image.naturalHeight === 0) {
-					window.requestAnimationFrame(fadeNextImage);
-					return;
-				} else {
-					_this.removeClass(photo, 'load-spinner');
-					_this.removeClass(image, 'transparent');
-					desc.innerHTML = _this.photos[i].description;
-				}
-			};
+					image.setAttribute('src', _this.photos[i].src);
+
+					if (!image.complete || image.naturalHeight === 0) {
+						window.requestAnimationFrame(fadeNextImage);
+						return;
+					} else {
+						clearInterval(loadInterval);
+						_this.removeClass(photo, 'load-spinner');
+						_this.removeClass(image, 'transparent');
+						desc.innerHTML = _this.photos[i].description;
+					}
+				},
+				loadInterval = setInterval(function() {
+					desc.innerHTML = '. ' + desc.innerHTML + ' .';
+				}, 1000);
 
 			_this.addClass(photo, 'load-spinner');
+			desc.innerHTML = '.loading.';
 			fadeNextImage();
 		},
 		close_clickHandler = function(e) {

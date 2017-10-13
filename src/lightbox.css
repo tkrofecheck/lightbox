@@ -200,10 +200,8 @@ html, body, div, span {
 }
 
 .modal .load-spinner::after {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    transform-style: preserve-3d;
+    left: calc(50% - 50px); /* position minus half spinner size */
+    top: calc(50% - 50px); /* position minus half spinner size */
 }
 
 .modal .nav {
