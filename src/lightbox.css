@@ -248,6 +248,10 @@ html, body, div, span {
     .lb-gallery .thumb-container img {
         max-width: 100%;
     }
+
+    .modal .nav .left, .modal .nav .right {
+        font-size: 3em;
+    }
 }
 
 @media (min-width: 640px) {
@@ -263,10 +267,6 @@ html, body, div, span {
     .lb-gallery .thumb-container,
     .lb-gallery .thumb-container::after {
         width: 33.33%;
-    }
-
-    .modal .nav .left, .modal .nav .right {
-        font-size: 3em;
     }
 }
 
