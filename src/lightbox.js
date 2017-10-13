@@ -319,7 +319,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 	_this.addClass(modal, 'modal');
 	modal.setAttribute('data-index', index);
 	modal.innerHTML =
-		'<div class="close">&times;</div>' +
+		'<div class="close"></div>' +
 		'<div class="photo-container">' +
 		'<img src="' +
 		thumbEl.querySelector('img').getAttribute('data-src') +
@@ -327,8 +327,8 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 		'<div class="description"></div>' +
 		'</div>' +
 		'<div class="nav">' +
-		'<span class="left">&lt;</span>' +
-		'<span class="right">&gt;</span>' +
+		'<span class="left"></span>' +
+		'<span class="right"></span>' +
 		'</div>';
 
 	container.appendChild(modal);

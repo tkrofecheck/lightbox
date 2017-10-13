@@ -82,6 +82,7 @@ html, body, div, span {
     border-radius: 80px;
     transform: translateZ(0);
     animation: load8 1.1s infinite linear;
+    transform-style: preserve-3d;
     width: 100px;
     height: 100px;
     margin: 0;
@@ -159,10 +160,7 @@ html, body, div, span {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-}
-
-.modal.show {
-    opacity: 1;
+    transform-style: preserve-3d;
 }
 
 .modal .close {
@@ -171,6 +169,55 @@ html, body, div, span {
     right: 10px;
     width: 40px;
     height: 40px;
+    font-size: 40px;
+}
+
+.modal .close::after {
+    content: '\2715';
+}
+
+.modal .close:hover {
+    color: #ffffff;
+}
+
+.modal .nav {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+}
+
+.modal .nav .left, .modal .nav .right {
+    position: absolute;
+    font-size: 125px;
+    transition: color .2s ease-in-out;
+    color: #5c5c5c;
+    top: 50%;
+    transform: translate(0%, -50%);
+    transform-style: preserve-3d;
+}
+
+.modal .nav .left:hover, .modal .nav .right:hover {
+    color: #ffffff;
+}
+
+.modal .nav .left {
+    left: 0;
+}
+
+.modal .nav .left::after {
+    content: '\21e6';
+}
+
+.modal .nav .right {
+    right: 0;
+}
+
+.modal .nav .right::after {
+    content: '\21e8';
+}
+
+.modal.show {
+    opacity: 1;
 }
 
 @media (min-width: 400px) {
