@@ -72,6 +72,11 @@ Lightbox.prototype.getData = function() {
 					if (this.status === 200) {
 						complete = true;
 
+						_this.responseJson = JSON.parse(this.responseText);
+
+						// use later after we get pages setup
+						//cacheKey = cacheKey + _this.responseJson.queries.request[0].startIndex;
+
 						if (useWebStorage) {
 							sessionStorage.setItem(cacheKey, this.responseText);
 						} else {
