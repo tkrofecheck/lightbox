@@ -5,8 +5,9 @@ function Lightbox(apiKeys) {
 	this.gallery = null;
 	this.responseJson = null;
 	this.photos = [];
+	this.cachedData = false;
+	this.searchResult = null;
 	this.cacheSearchPrefix = 'lbsearch_';
-	this.doNotRender = false;
 }
 
 Lightbox.prototype.useWebStorage = function() {
@@ -47,10 +48,7 @@ Lightbox.prototype.getData = function(query) {
 	var _this = this,
 		cacheKey = _this.cacheSearchPrefix + query,
 		useWebStorage = _this.useWebStorage(),
-		cachedJsonStr =
-			sessionStorage.getItem(cacheKey) ||
-			_this.getCookie(cacheKey) ||
-			null,
+		cachedJsonStr,
 		complete = false,
 		xhrSend = function(index) {
 			var xhr,
@@ -80,6 +78,7 @@ Lightbox.prototype.getData = function(query) {
 
 						_this.responseJson = JSON.parse(this.responseText);
 						_this.ready();
+						return;
 					}
 
 					if (this.status === 403) {
@@ -105,14 +104,22 @@ Lightbox.prototype.getData = function(query) {
 	* Do not make multiple calls due to API limit restriction
 	* Access cached response if available in webstorage or cookie
 	*/
+	if (complete) {
+		return;
+	}
+
+	cachedJsonStr = sessionStorage.getItem(cacheKey) || _this.getCookie(cacheKey) || null;
+	
 	if (
 		typeof cachedJsonStr !== 'undefined' &&
 		cachedJsonStr !== null &&
-		cachedJsonStr !== ''
+		cachedJsonStr !== ' '
 	) {
+		_this.cachedData = true;
 		_this.responseJson = JSON.parse(cachedJsonStr);
 		_this.ready();
 	} else {
+		_this.cachedData = false;
 		xhrSend(0);
 	}
 };
@@ -128,8 +135,6 @@ Lightbox.prototype.init = function(selector) {
 	this.gallery = document.querySelector(selector);
 
 	if (typeof this.gallery === 'undefined' || this.gallery === null) {
-		this.doNotRender = true;
-
 		throw Error(
 			'DOMelement with selector, "' +
 				selector +
@@ -150,24 +155,10 @@ Lightbox.prototype.galleryLoad = function(display) {
 	}
 };
 
-Lightbox.prototype.preset = function(search) {
-	if (this.doNotRender) {
-		console.log('Cannot search for ' + search + ' at this time');
-		return;
-	}
-
+Lightbox.prototype.search = function(search) {
 	if (search !== '') {
 		this.getData(search);
 	}
-};
-
-Lightbox.prototype.custom = function(search) {
-	if (this.doNotRender) {
-		console.log('Cannot search for ' + search + ' at this time');
-		return;
-	}
-
-	console.log('search', search);
 };
 
 Lightbox.prototype.ready = function() {
@@ -178,6 +169,9 @@ Lightbox.prototype.ready = function() {
 Lightbox.prototype.render = function() {
 	var _this = this,
 		images = _this.responseJson.items,
+		searchResult,
+		totalResults,
+		searchRequestTitle,
 		thumbnails,
 		thumb,
 		thumbLoaded = function(container) {
@@ -223,6 +217,30 @@ Lightbox.prototype.render = function() {
 		};
 
 	_this.gallery.innerHTML = ''; // clear gallery to display new search
+
+	totalResults = _this.cachedData
+		? 'Cached search results.'
+		: 'About ' +
+			_this.responseJson.queries.request[0].totalResults +
+			' results.';
+
+	_this.searchResult = document.querySelector('.search-result');
+
+	if (!_this.searchResult) {
+		searchResult = document.createElement('div');
+		_this.gallery.prepend(searchResult);
+		_this.addClass(searchResult, 'search-result');
+		_this.searchResult = document.querySelector('.search-result');
+	}
+
+	searchRequestTitle = _this.responseJson.queries.request[0].title;
+
+	_this.searchResult.innerHTML =
+		'<span class="total">' +
+		totalResults +
+		'</span><span class="title">' +
+		searchRequestTitle +
+		'</span>';
 
 	for (let i = 0; i < images.length; i++) {
 		createDiv(i);
@@ -280,11 +298,10 @@ Lightbox.prototype.bindEvents = function() {
 	var _this = this,
 		useWebStorage = _this.useWebStorage,
 		clearStorage = document.querySelector('.clear-storage'),
-		presetBtn = document.querySelector('[data-type="preset"]'),
-		customBtn = document.querySelector('[data-type="custom"]'),
+		presetBtn = document.getElementById('preset'),
+		customBtn = document.getElementById('custom'),
 		searchTypePreset = document.querySelector('.search-type .preset'),
-		searchTypeCustom = document.querySelector('.search-type .custom'),
-		searchBox = searchTypeCustom.querySelector('[name=searchBox]');
+		searchTypeCustom = document.querySelector('.search-type .custom');
 
 	clearStorage.addEventListener('click', function() {
 		console.log('clear search history');
@@ -311,20 +328,6 @@ Lightbox.prototype.bindEvents = function() {
 	customBtn.addEventListener('click', function() {
 		_this.addClass(searchTypePreset, 'hide');
 		_this.removeClass(searchTypeCustom, 'hide');
-	});
-
-	searchBox.addEventListener('submit', function(e) {
-		e.preventDefault(); // stop form from refreshing page on submit
-		var search = e.target[0].value; // text input value
-
-		if (_this.doNotRender) {
-			console.log('Cannot search for ' + search + ' at this time');
-			return;
-		}
-
-		if (search !== '') {
-			_this.getData(search);
-		}
 	});
 };
 
