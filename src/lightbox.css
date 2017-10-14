@@ -21,6 +21,15 @@ body {
     font-size: 1.5em;
 }
 
+.clear-storage {
+    margin: 20px;
+}
+
+.clear-storage button {
+    font-size: 1em;
+    padding: 5px;
+}
+
 .hide {
     display: none;
 }

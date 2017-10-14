@@ -170,6 +170,7 @@ Lightbox.prototype.ready = function() {
 Lightbox.prototype.render = function() {
 	var _this = this,
 		images = _this.responseJson.items,
+		clearStorage = document.querySelector('.clear-storage button'),
 		searchResult,
 		totalResults,
 		searchRequestTitle,
@@ -267,6 +268,8 @@ Lightbox.prototype.render = function() {
 			_this.Modal(this, i);
 		});
 	}
+
+	_this.removeClass(clearStorage, 'hide');
 };
 
 Lightbox.prototype.hasClass = function(el, className) {
@@ -299,16 +302,16 @@ Lightbox.prototype.removeClass = function(el, className) {
 Lightbox.prototype.bindEvents = function() {
 	var _this = this,
 		useWebStorage = _this.useWebStorage,
-		clearStorage = document.querySelector('.clear-storage'),
+		clearStorage = document.querySelector('.clear-storage button'),
 		presetBtn = document.getElementById('preset'),
 		customBtn = document.getElementById('custom'),
 		searchTypePreset = document.querySelector('.search-type .preset'),
 		searchTypeCustom = document.querySelector('.search-type .custom');
 
 	clearStorage.addEventListener('click', function() {
-		console.log('clear search history');
 		var i = sessionStorage.length,
-			re = new RegExp(_this.cacheSearchPrefix);
+			re = new RegExp(_this.cacheSearchPrefix),
+			refresh;
 
 		while (i--) {
 			var key = sessionStorage.key(i);
