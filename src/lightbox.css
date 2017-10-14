@@ -396,3 +396,9 @@ body {
         width: 20%;
     }
 }
+
+@media print and (min-width: 10px) {
+    .clear-storage, .search {
+        display: none;
+    }
+}
