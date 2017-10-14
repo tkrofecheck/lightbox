@@ -76,8 +76,8 @@
 
                 <div class="search-type">
                     <div class="types">
-                        <div>Preset</div>
-                        <div>Custom</div>
+                        <div data-type="preset">Preset</div>
+                        <div data-type="custom">Custom</div>
                     </div>
                     <div class="preset">
                         <div>
@@ -121,7 +121,7 @@
                         </div>-->
                     </div>
                     <div class="custom hide">
-                        <form name="customSearch" onsubmit="Gallery.custom(this)">
+                        <form name="searchBox">
                             <input type="text" name="search" placeholder="Image Search" />                
                             <input type="submit" value="Search" />
                         </form>

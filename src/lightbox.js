@@ -279,10 +279,12 @@ Lightbox.prototype.removeClass = function(el, className) {
 Lightbox.prototype.bindEvents = function() {
 	var _this = this,
 		useWebStorage = _this.useWebStorage,
-		clearStorage,
-		customSearch = document.querySelector('[name=customSearch]');
-
-	clearStorage = document.querySelector('.clear-storage');
+		clearStorage = document.querySelector('.clear-storage'),
+		presetBtn = document.querySelector('[data-type="preset"]'),
+		customBtn = document.querySelector('[data-type="custom"]'),
+		searchTypePreset = document.querySelector('.search-type .preset'),
+		searchTypeCustom = document.querySelector('.search-type .custom'),
+		searchBox = searchTypeCustom.querySelector('[name=searchBox]');
 
 	clearStorage.addEventListener('click', function() {
 		console.log('clear search history');
@@ -301,9 +303,24 @@ Lightbox.prototype.bindEvents = function() {
 		}
 	});
 
-	customSearch.addEventListener('submit', function(e) {
+	presetBtn.addEventListener('click', function(e) {
+		_this.removeClass(searchTypePreset, 'hide');
+		_this.addClass(searchTypeCustom, 'hide');
+	});
+
+	customBtn.addEventListener('click', function() {
+		_this.addClass(searchTypePreset, 'hide');
+		_this.removeClass(searchTypeCustom, 'hide');
+	});
+
+	searchBox.addEventListener('submit', function(e) {
 		e.preventDefault(); // stop form from refreshing page on submit
 		var search = e.target[0].value; // text input value
+
+		if (_this.doNotRender) {
+			console.log('Cannot search for ' + search + ' at this time');
+			return;
+		}
 
 		if (search !== '') {
 			_this.getData(search);
@@ -369,7 +386,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 		loadingDots,
 		updateImage = function(i) {
 			loadingDots = 1;
-			
+
 			var fadeNextImage = function() {
 					_this.addClass(image, 'transparent');
 
