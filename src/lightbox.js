@@ -108,8 +108,9 @@ Lightbox.prototype.getData = function(query) {
 		return;
 	}
 
-	cachedJsonStr = sessionStorage.getItem(cacheKey) || _this.getCookie(cacheKey) || null;
-	
+	cachedJsonStr =
+		sessionStorage.getItem(cacheKey) || _this.getCookie(cacheKey) || null;
+
 	if (
 		typeof cachedJsonStr !== 'undefined' &&
 		cachedJsonStr !== null &&
@@ -216,6 +217,7 @@ Lightbox.prototype.render = function() {
 			}
 		};
 
+	_this.photos = [];
 	_this.gallery.innerHTML = ''; // clear gallery to display new search
 
 	totalResults = _this.cachedData
