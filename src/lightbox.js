@@ -7,6 +7,7 @@ function Lightbox(apiKeys) {
 	this.photos = [];
 	this.cachedData = false;
 	this.searchResult = null;
+	this.searchQuery = null;
 	this.cacheSearchPrefix = 'lbsearch_';
 }
 
@@ -44,8 +45,9 @@ Lightbox.prototype.getCookie = function(cname) {
 	return '';
 };
 
-Lightbox.prototype.getData = function(query) {
+Lightbox.prototype.getData = function() {
 	var _this = this,
+		query = _this.searchQuery,
 		cacheKey = _this.cacheSearchPrefix + query,
 		useWebStorage = _this.useWebStorage(),
 		cachedJsonStr,
@@ -158,7 +160,8 @@ Lightbox.prototype.galleryLoad = function(display) {
 
 Lightbox.prototype.search = function(search) {
 	if (search !== '') {
-		this.getData(search);
+		this.searchQuery = search;
+		this.getData();
 	}
 };
 
@@ -323,6 +326,12 @@ Lightbox.prototype.bindEvents = function() {
 				}
 			}
 		}
+
+		refresh = confirm('Refresh most recent search results?');
+
+		if (refresh) {
+			_this.getData(_this.searchQuery);
+		}
 	});
 
 	presetBtn.addEventListener('click', function(e) {
@@ -333,6 +342,7 @@ Lightbox.prototype.bindEvents = function() {
 	customBtn.addEventListener('click', function() {
 		_this.addClass(searchTypePreset, 'hide');
 		_this.removeClass(searchTypeCustom, 'hide');
+		searchTypeCustom.querySelector('input[type=text]').focus();
 	});
 };
 
