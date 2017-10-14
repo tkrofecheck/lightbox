@@ -20,7 +20,7 @@
                 display: table;
                 width: auto;
                 height: auto;
-                font-family: 'Verdana', sans-serif;
+                font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
                 color: #000000;
                 text-transform: uppercase;
             }
@@ -31,25 +31,28 @@
             }
             
             .connection .dot {
-                display: block;
-                width: 20px;
-                height: 20px;
-                border-radius: 10px;
-                background-color: yellow;
-                transition: background .5s ease-in-out;
+                display: table-cell;
+                vertical-align: middle;
+                color: yellow;
+                transition: color .5s ease-in-out;
+            }
+
+            .connection .dot::after {
+                content: '\25CE';
             }
 
             .connection.online .dot {
-                background-color: green;
+                color: #32CD32;
             }
 
             .connection.offline .dot {
-                background-color: red;
+                color: red;
             }
 
-            .connection .message:after {
+            .connection .message {
                 position: relative;
-                left: 5px;
+                left: 3px;
+                font-size: 0.9em;
             }
 
             .connection.online .message:after {
@@ -74,57 +77,50 @@
 
                 <h1>Image Search</h1>
 
-                <div class="search-type">
-                    <div class="types">
-                        <div data-type="preset">Preset</div>
-                        <div data-type="custom">Custom</div>
+                <div class="types">
+                    <div>
+                        <input id="preset" name="search-type" type="radio" checked>
+                        <label for="preset">Preset</label>
                     </div>
+                    <div>
+                        <input id="custom" name="search-type" type="radio">
+                        <label for="custom">Custom</label>
+                    </div>
+                </div>
+
+                <div class="search-type">
                     <div class="preset">
                         <div>
-                            <label for="gallerySelector">Gallery 1</label>
-                            <select name="gallerySelector" onchange="Gallery.preset(this.value)">
-                                <option value="" selected="selected">Halloween</option>
-                                <option value="">-------------------------</option>
+                            <select name="gallerySelector" onchange="Gallery.search(this.value)">
+                                <option value="" selected="selected">Select a Topic</option>
+                                <option class="category" value="">Halloween</option>
                                 <option value="halloween+pumpkin">Pumpkin</option>
                                 <option value="halloween+witch">Witch</option>
                                 <option value="halloween+ghost">Ghost</option>
                                 <option value="halloween+scarecrow">Scarecrow</option>
                                 <option value="halloween+clown">Clown</option>
-                                <option value="">-------------------------</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="gallerySelector2">Gallery 2</label>
-                            <select name="gallerySelector2" onchange="Gallery2.preset(this.value)">
-                                <option value="" selected="selected">New York City</option>
-                                <option value="">-------------------------</option>
+                                <option></option>
+                                <option class="category" value="">New York City</option>
                                 <option value="nyc+statue+of+liberty">Statue of Liberty</option>
                                 <option value="nyc+times+square">Times Square</option>
                                 <option value="nyc+empire+state+building">Empire State Building</option>
                                 <option value="nyc+central+park">Central Park</option>
                                 <option value="nyc+city+hall">City Hall</option>
-                                <option value="">-------------------------</option>
-                            </select>
-                        </div>
-                        <!--<div>
-                            <label for="gallerySelector3">Gallery 3</label>
-                            <select name="gallerySelector3" onchange="Gallery3.preset(this.value)">
-                                <option value="" selected="selected">Food</option>
-                                <option value="">-------------------------</option>
+                                <option ></option>
+                                <option class="category" value="">Food</option>
                                 <option value="food+pizza">Pizza</option>
                                 <option value="food+cheeseburger">Cheeseburger</option>
                                 <option value="food+salad">Salad</option>
                                 <option value="food+fruit">Fruit</option>
                                 <option value="food+bread">Bread</option>
-                                <option value="">-------------------------</option>
                             </select>
-                        </div>-->
+                        </div>
                     </div>
                     <div class="custom hide">
-                        <form name="searchBox">
-                            <input type="text" name="search" placeholder="Image Search" />                
-                            <input type="submit" value="Search" />
-                        </form>
+                        <div name="searchBox">
+                            <input type="text" placeholder="Image Search" />                
+                            <button name="search" onclick="Gallery.search(this.previousElementSibling.value)">Search</button>
+                        </div>
                     </div>
                     <button class="clear-storage">Clear Search History</button>
                 </div>
@@ -173,21 +169,10 @@
                     'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
                     'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
                 ],
-                Gallery,
-                Gallery2,
-                Gallery3;
+                Gallery;
             
-            // Instance 1
             Gallery = new Lightbox(apiKeys);
             Gallery.init('.gallery');
-
-            // Instance 2 (only available using 'Preset' dropdowns at this time)
-            Gallery2 = new Lightbox(apiKeys);
-            Gallery2.init('.gallery2');
-
-            // Instance 3 (missing HTML element - error displayed in console)
-            /*Gallery3 = new Lightbox(apiKeys);
-            Gallery3.init('.gallery3');*/
         </script>
     </body>
 </html>
