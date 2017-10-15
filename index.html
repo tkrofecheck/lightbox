@@ -118,7 +118,8 @@
                     </div>
                     <div class="custom hide">
                         <div name="searchBox">
-                            <input type="text" placeholder="Enter search here..." />                
+                            <input type="text" id="mySearch" autocomplete="on" required/>
+                            <label for="mySearch"><span>What are you looking for?</span></label>               
                             <button name="search" onclick="Gallery.search(this.previousElementSibling.value)">Search</button>
                         </div>
                     </div>
