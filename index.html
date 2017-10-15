@@ -120,7 +120,7 @@
                         <div name="searchBox">
                             <input type="text" id="mySearch" autocomplete="on" required/>
                             <label for="mySearch"><span>What are you looking for?</span></label>               
-                            <button name="search" onclick="Gallery.search(this.previousElementSibling.value)">Search</button>
+                            <button name="search" onclick="Gallery.search(document.getElementById('mySearch').value)">Search</button>
                         </div>
                     </div>
                 </div>
