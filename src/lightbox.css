@@ -73,15 +73,6 @@ body {
     max-height: 125px
 }
 
-@-webkit-keyframes load8{
-    0%{
-        transform:rotate(0);
-    }
-    100%{
-        transform:rotate(360deg);
-    }
-}
-
 .load-spinner::after {
     content: '';
     box-sizing: border-box;
@@ -320,6 +311,15 @@ body {
     opacity: 1;
 }
 
+
+@keyframes load8{
+    0%{
+        transform:rotate(0);
+    }
+    100%{
+        transform:rotate(360deg);
+    }
+}
 
 /* MEDIA QUERIES */
 
