@@ -1,0 +1,16 @@
+{
+    "topics": [
+        {
+            "name" : "Halloween",
+            "options" : ["pumpkin", "witch", "ghost", "scarecrow", "clown"]
+        },
+        {
+            "name" : "New York City",
+            "options" : ["statue of liberty", "times square", "empire state building", "central park", "city hall"]
+        },
+        {
+            "name" : "Food",
+            "options" : ["pizza", "cheeseburger", "salad", "fruit", "baked potato"]
+        }
+    ]
+}
