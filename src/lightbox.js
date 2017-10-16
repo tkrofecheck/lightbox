@@ -47,7 +47,7 @@ Lightbox.prototype.useWebStorage = function() {
 		sessionStorage.removeItem('test');
 		return true;
 	} catch (e) {
-		console.log('web storage not supported, using cookies instead');
+		console.warn('web storage not supported, data will not be cached');
 		return false;
 	}
 };
