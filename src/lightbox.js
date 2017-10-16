@@ -611,7 +611,6 @@ Lightbox.prototype.bind_modalEvents = function() {
 				image.src = _this.photos[i].src;
 
 				if (!image.complete) {
-					console.log('stuck here', image);
 					raf(loadNextImage);
 					return;
 				} else {
@@ -648,7 +647,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 		index = index === 0 ? position : index - 1;
 		updateImage(index);
 	}
-	
+
 	function rightNav_clickHandler(e) {
 		e.stopPropagation();
 		position = _this.photos.length - 1;
