@@ -645,6 +645,10 @@ body {
     .lb-container .lb-gallery .thumb-container::after {
         width: 20%;
     }
+
+    .lb-container .lb-gallery .thumb-container.empty {
+        display: none;
+    }
 }
 
 @media print and (min-width: 10px) {
