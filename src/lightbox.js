@@ -561,7 +561,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 			_this.addClass(modal, 'show');
 			_this.bind_modalEvents();
 		}
-	};
+	}
 
 	this.addClass(modal, 'modal');
 	modal.setAttribute('data-index', index);
@@ -623,8 +623,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 			loadInterval = setInterval(function(i) {
 				if (loadingDots < 5) {
 					loadingDots++;
-					desc.innerHTML =
-						'&#8226; ' + desc.innerHTML + ' &#8226;';
+					desc.innerHTML = '&#8226; ' + desc.innerHTML + ' &#8226;';
 				} else {
 					loadingDots = 1;
 					desc.innerHTML = '&#8226; loading &#8226;';
@@ -714,7 +713,7 @@ Lightbox.prototype.watch_connectionStatus = function() {
 		),
 		connection = container.querySelector('.connection'),
 		formElements = container.querySelectorAll('input,select,button');
-	
+
 	function connectionStatus() {
 		var status = navigator.onLine ? 'online' : 'offline';
 		var disabled = status === 'offline';
@@ -722,11 +721,11 @@ Lightbox.prototype.watch_connectionStatus = function() {
 		connection.className = 'connection ' + status;
 
 		if (status === 'offline') {
-			for (let i=0; i< formElements.length; i++) {
+			for (let i = 0; i < formElements.length; i++) {
 				formElements[i].setAttribute('disabled', true);
 			}
 		} else {
-			for (let i=0; i< formElements.length; i++) {
+			for (let i = 0; i < formElements.length; i++) {
 				formElements[i].removeAttribute('disabled');
 			}
 		}
