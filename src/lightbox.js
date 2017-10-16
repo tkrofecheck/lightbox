@@ -593,3 +593,75 @@ Lightbox.prototype.bind_modalEvents = function() {
 		e.stopPropagation();
 	});
 };
+
+Lightbox.prototype.createContainer = function() {
+	var container = document.createElement('div'),
+		html = '';
+
+	html += '<div class="search">';
+
+	if (this.config.monitorConnection) {
+		html +=
+			'<div class="connection">' +
+			'<span class="dot"></span>' +
+			'<span class="message"></span>' +
+			'</div>';
+	}
+
+	html +=
+		'<h1>' +
+		this.config.searchName +
+		'</h1>' +
+		'</div>' +
+		'<div class="lb-gallery"></div>' +
+		'<div class="clear-storage">' +
+		'<button class="hide">Clear Search History</button>' +
+		'<span class="hide">Search History Cleared!</span>' +
+		'</div>' +
+		'</div>';
+
+	container.setAttribute('data-name', this.config.containerName);
+	this.addClass(container, 'lb-container');
+	container.innerHTML = html;
+
+	this.body.appendChild(container);
+
+	this.lbContainer = container;
+
+	this.gallery = container.querySelector('.lb-gallery');
+
+	if (this.config.monitorConnection) {
+		this.watch_connectionStatus();
+	}
+
+	this.render_searchTypes();
+};
+
+Lightbox.prototype.watch_connectionStatus = function() {
+	var container = document.querySelector(
+			'[data-name="' + this.config.containerName + '"]'
+		),
+		connection = container.querySelector('.connection'),
+		formElements = container.querySelectorAll('input,select,button');
+
+	function connectionStatus() {
+		var status = navigator.onLine ? 'online' : 'offline';
+		var disabled = status === 'offline';
+
+		connection.className = 'connection ' + status;
+
+		if (status === 'offline') {
+			formElements.forEach(function(node) {
+				node.setAttribute('disabled', true);
+			});
+		} else {
+			formElements.forEach(function(el) {
+				el.removeAttribute('disabled');
+			});
+		}
+	}
+
+	window.addEventListener('load', connectionStatus);
+	window.addEventListener('online', connectionStatus);
+	window.addEventListener('offline', connectionStatus);
+};

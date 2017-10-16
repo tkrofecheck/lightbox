@@ -9,60 +9,6 @@
         <link href="./src/lightbox.css" rel="stylesheet"/>
     </head>
     <body>
-        <div id="container">
-            <div class="search">
-                <div class="connection">
-                    <span class="dot"></span>
-                    <span class="message"></span>
-                </div>
-
-                <h1>Image Search</h1>
-
-                <div class="types">
-                    <div>
-                        <input id="preset" name="search-type" type="radio" checked>
-                        <label for="preset">Preset</label>
-                    </div>
-                    <div>
-                        <input id="custom" name="search-type" type="radio">
-                        <label for="custom">Custom</label>
-                    </div>
-                </div>
-
-            </div>
-            <div id="gallery"></div>
-            <div class="clear-storage">
-                <button class="hide">Clear Search History</button>
-            </div>
-        </div>
-        <script type="text/javascript">
-            //Monitor network connection
-            (function () {
-                var connection = document.querySelector('.connection');
-                var formElements = document.getElementById('container').querySelectorAll('input,select,button');
-
-                function connectionStatus() {
-                    var status = navigator.onLine ? 'online' : 'offline';
-                    var disabled = (status === 'offline');
-
-                    connection.className = 'connection ' + status;
-
-                    if (status === 'offline') {
-                        formElements.forEach(function(node) {
-                            node.setAttribute('disabled', true);
-                        });
-                    } else {
-                        formElements.forEach(function(el) {
-                            el.removeAttribute('disabled');
-                        });
-                    }
-                }
-
-                window.addEventListener('load', connectionStatus);
-                window.addEventListener('online', connectionStatus);
-                window.addEventListener('offline', connectionStatus);
-            })();
-        </script>
 
         <script src="./src/lightbox.js"></script>
         <script type="text/javascript">
