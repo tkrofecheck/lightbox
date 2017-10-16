@@ -306,7 +306,9 @@ body {
     font-size: 1.2em;
     top: -45px;
     left: 0px;
+    right: 0px;
     z-index: -1;
+    text-align: center;
     -webkit-transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease;
     -o-transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease;
     transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease;
