@@ -120,7 +120,52 @@ body {
     width: auto;
 }
 
+.lb-container .connection {
+    position: relative;
+    display: table;
     width: auto;
+    height: auto;
+    font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+.lb-container .connection span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.lb-container .connection .dot {
+    display: table-cell;
+    vertical-align: middle;
+    color: yellow;
+    transition: color .5s ease-in-out;
+}
+
+.lb-container .connection .dot::after {
+    content: '\25CE';
+}
+
+.lb-container .connection.online .dot {
+    color: #32CD32;
+}
+
+.lb-container .connection.offline .dot {
+    color: red;
+}
+
+.lb-container .connection .message {
+    position: relative;
+    left: 3px;
+    font-size: 0.9em;
+}
+
+.lb-container .connection.online .message:after {
+    content: 'connected';
+}
+
+.lb-container .connection.offline .message:after {
+    content: 'no internet connection!';
 }
 
     text-align: center;

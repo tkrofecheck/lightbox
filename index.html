@@ -7,59 +7,6 @@
         <meta name="description" content="Lightbox application to display photos pulled in with Google API">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="./src/lightbox.css" rel="stylesheet"/>
-
-        <style>
-            /* External stylesheet may not be available for connection test
-            *  Keep style embedded
-            */
-            .connection {
-                position: relative;
-                display: table;
-                width: auto;
-                height: auto;
-                font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
-                color: #000000;
-                text-transform: uppercase;
-            }
-
-            .connection span {
-                display: table-cell;
-                vertical-align: middle;
-            }
-            
-            .connection .dot {
-                display: table-cell;
-                vertical-align: middle;
-                color: yellow;
-                transition: color .5s ease-in-out;
-            }
-
-            .connection .dot::after {
-                content: '\25CE';
-            }
-
-            .connection.online .dot {
-                color: #32CD32;
-            }
-
-            .connection.offline .dot {
-                color: red;
-            }
-
-            .connection .message {
-                position: relative;
-                left: 3px;
-                font-size: 0.9em;
-            }
-
-            .connection.online .message:after {
-                content: 'connected';
-            }
-
-            .connection.offline .message:after {
-                content: 'no internet connection!';
-            }
-        </style>
     </head>
     <body>
         <div id="container">
