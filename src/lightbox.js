@@ -55,7 +55,8 @@ Lightbox.prototype.useWebStorage = function() {
 Lightbox.prototype.xhrRequest = function(type, url, successHandler) {
 	var _this = this,
 		useWebStorage = this.useWebStorage(),
-		xhr;
+		xhr,
+		jsonObj;
 
 	function errorHandler(msg) {
 		console.error(msg);
@@ -73,7 +74,13 @@ Lightbox.prototype.xhrRequest = function(type, url, successHandler) {
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
-				successHandler && successHandler(xhr.response);
+				if (typeof xhr.response === 'string') {
+					jsonObj = JSON.parse(xhr.response);
+				} else {
+					jsonObj = xhr.response;
+				}
+
+				successHandler && successHandler(jsonObj);
 			}
 
 			if (xhr.status === 403) {
