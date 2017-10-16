@@ -132,14 +132,20 @@ Lightbox.prototype.search = function(search) {
 };
 
 Lightbox.prototype.ready = function() {
-	// Data is ready, continue...
-	this.render();
+	// Search data is ready, continue to render gallery...
+	this.render_gallery();
 };
 
-Lightbox.prototype.render = function() {
+Lightbox.prototype.render_gallery = function() {
 	var _this = this,
-		images = _this.responseJson.items,
+		images = this.responseJson.items || null,
 		clearStorage = document.querySelector('.clear-storage button'),
+		raf =
+			window.requestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			window.oRequestAnimationFrame,
 		searchResult,
 		totalResults,
 		searchRequestTitle,
