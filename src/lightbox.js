@@ -113,9 +113,50 @@ Lightbox.prototype.loading = function(el, display, type) {
 };
 
 Lightbox.prototype.search = function(search) {
+	var _this = this,
+		useWebStorage = this.useWebStorage(),
+		cacheKey,
+		url,
+		response;
+
+	function successFn(data) {
+		_this.responseJson = data;
+
+		if (useWebStorage) {
+			sessionStorage.setItem(cacheKey, JSON.stringify(data));
+		}
+
+		_this.ready();
+	}
+
 	if (search !== '') {
 		this.searchQuery = search;
-		this.getData();
+
+		cacheKey = this.config.cachePrefix + this.searchQuery;
+
+		if (useWebStorage) {
+			cachedJsonStr = sessionStorage.getItem(cacheKey) || null;
+		}
+
+		if (
+			typeof cachedJsonStr !== 'undefined' &&
+			cachedJsonStr !== null &&
+			cachedJsonStr !== ' '
+		) {
+			this.cachedData = true;
+			this.responseJson = JSON.parse(cachedJsonStr);
+			this.ready();
+		} else {
+			this.cachedData = false;
+
+			url =
+				'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo&q=' +
+				this.searchQuery +
+				'&safe=high&searchType=image&key=' +
+				this.config.apiKey;
+
+			this.xhrRequest('GET', url, successFn);
+		}
 	}
 };
 
