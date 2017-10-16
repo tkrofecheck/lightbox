@@ -469,24 +469,30 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 	}
 
 	var _this = this,
-		container = document.getElementById('container'),
+		container = this.lbContainer,
 		modal = document.createElement('div'),
-		showModal = function() {
-			var photo = modal.querySelector('img');
+		raf =
+			window.requestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			window.oRequestAnimationFrame;
 
-			if (!photo.complete || photo.naturalHeight === 0) {
-				window.requestAnimationFrame(showModal);
-				return;
-			} else {
-				_this.removeClass(thumbEl, 'load-spinner');
-				_this.removeClass(thumbEl, 'light');
-				_this.addClass(_this.body, 'no-scroll');
-				_this.addClass(modal, 'show');
-				_this.bind_modalEvents();
-			}
-		};
+	function showModal() {
+		var photo = modal.querySelector('img');
 
-	_this.addClass(modal, 'modal');
+		if (!photo.complete || photo.naturalHeight === 0) {
+			raf(showModal);
+			return;
+		} else {
+			_this.loading(thumbEl, false, 'light');
+			_this.addClass(_this.body, 'no-scroll');
+			_this.addClass(modal, 'show');
+			_this.bind_modalEvents();
+		}
+	};
+
+	this.addClass(modal, 'modal');
 	modal.setAttribute('data-index', index);
 	modal.innerHTML =
 		'<div class="close"></div>' +
