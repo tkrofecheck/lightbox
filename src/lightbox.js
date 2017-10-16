@@ -184,23 +184,21 @@ Lightbox.prototype.render_gallery = function() {
 			var image = container.querySelector('img');
 
 			if (!image.complete || image.naturalHeight === 0) {
-				window.requestAnimationFrame(function() {
+				raf(function() {
 					thumbLoaded(container);
 				});
 				return;
 			} else {
-				_this.removeClass(container, 'load-spinner');
-				_this.removeClass(container, 'dark');
+				_this.loading(container, false, 'dark');
 			}
 		},
 		createDiv = function(index) {
 			var div = document.createElement('div'),
 				photo;
 
-			if (index >= 0) {
+			if (index >= 0 && images !== null) {
 				_this.addClass(div, 'thumb-container');
-				_this.addClass(div, 'load-spinner');
-				_this.addClass(div, 'dark');
+				_this.loading(div, true, 'dark');
 
 				photo = document.createElement('img');
 				photo.setAttribute('src', images[index].image.thumbnailLink);
@@ -222,27 +220,27 @@ Lightbox.prototype.render_gallery = function() {
 			}
 		};
 
-	_this.photos = [];
-	_this.gallery.innerHTML = ''; // clear gallery to display new search
+	this.photos = [];
+	this.gallery.innerHTML = ''; // clear gallery to display new search
 
-	totalResults = _this.cachedData
+	totalResults = this.cachedData
 		? 'Cached search results.'
 		: 'About ' +
-			_this.responseJson.queries.request[0].totalResults +
+			this.responseJson.queries.request[0].totalResults +
 			' results.';
 
-	_this.searchResult = document.querySelector('.search-result');
+	this.searchResult = document.querySelector('.search-result');
 
 	if (!_this.searchResult) {
 		searchResult = document.createElement('div');
-		_this.gallery.prepend(searchResult);
-		_this.addClass(searchResult, 'search-result');
-		_this.searchResult = document.querySelector('.search-result');
+		this.gallery.prepend(searchResult);
+		this.addClass(searchResult, 'search-result');
+		this.searchResult = document.querySelector('.search-result');
 	}
 
-	searchRequestTitle = _this.responseJson.queries.request[0].title;
+	searchRequestTitle = this.responseJson.queries.request[0].title;
 
-	_this.searchResult.innerHTML =
+	this.searchResult.innerHTML =
 		'<span class="total">' +
 		totalResults +
 		'</span><span class="title">' +
@@ -261,16 +259,12 @@ Lightbox.prototype.render_gallery = function() {
 	createDiv(-1);
 	createDiv(-1);
 
-	// Bind events for dynamic elements
-	thumbnails = _this.gallery.querySelectorAll('.thumb-container:not(.empty)');
+	this.removeClass(clearStorage, 'hide');
+	this.addClass(clearStorage.nextSibling, 'hide');
 
-	for (let i = 0; i < thumbnails.length; i++) {
-		thumbnails[i].addEventListener('click', function(e) {
-			e.stopPropagation();
-			_this.addClass(this, 'load-spinner');
-			_this.addClass(this, 'light');
-			_this.Modal(this, i);
-		});
+	this.bind_galleryEvents();
+};
+
 Lightbox.prototype.render_searchTypes = function() {
 	var _this = this,
 		searchContainer = this.lbContainer.querySelector('.search'),
@@ -454,18 +448,25 @@ Lightbox.prototype.removeClass = function(el, className) {
 	}
 };
 
-Lightbox.prototype.bindEvents = function() {
+Lightbox.prototype.bind_galleryEvents = function() {
 	var _this = this,
-		useWebStorage = _this.useWebStorage,
+		useWebStorage = this.useWebStorage(),
 		clearStorage = document.querySelector('.clear-storage button'),
-		presetBtn = document.getElementById('preset'),
-		customBtn = document.getElementById('custom'),
-		searchTypePreset = document.querySelector('.search-type .preset'),
-		searchTypeCustom = document.querySelector('.search-type .custom');
+		thumbnails = this.gallery.querySelectorAll(
+			'.thumb-container:not(.empty)'
+		);
+
+	for (let i = 0; i < thumbnails.length; i++) {
+		thumbnails[i].addEventListener('click', function(e) {
+			e.stopPropagation();
+			_this.loading(this, true, 'light');
+			_this.Modal(this, i);
+		});
+	}
 
 	clearStorage.addEventListener('click', function() {
 		var i = sessionStorage.length,
-			re = new RegExp(_this.cacheSearchPrefix),
+			re = new RegExp(_this.config.cachePrefix),
 			refresh;
 
 		while (i--) {
@@ -473,29 +474,64 @@ Lightbox.prototype.bindEvents = function() {
 			if (re.test(key)) {
 				if (useWebStorage) {
 					sessionStorage.removeItem(key);
-				} else {
-					_this.setCookie(key, -1);
 				}
 			}
 		}
 
-		refresh = confirm('Refresh most recent search results?');
-
-		if (refresh) {
-			_this.getData(_this.searchQuery);
-		}
+		_this.removeClass(clearStorage.nextSibling, 'hide');
 	});
+};
 
-	presetBtn.addEventListener('click', function(e) {
-		_this.removeClass(searchTypePreset, 'hide');
-		_this.addClass(searchTypeCustom, 'hide');
-	});
+Lightbox.prototype.bind_searchTypeEvents = function() {
+	var _this = this,
+		presetBtn,
+		customBtn,
+		searchTypePreset,
+		searchTypeCustom,
+		searchBox,
+		searchBoxInput,
+		searchBoxBtn,
+		searchQuery;
 
-	customBtn.addEventListener('click', function() {
-		_this.addClass(searchTypePreset, 'hide');
-		_this.removeClass(searchTypeCustom, 'hide');
-		searchTypeCustom.querySelector('input[type=text]').focus();
-	});
+	if (this.config.create_Dropdown) {
+		presetBtn = document.getElementById('preset');
+		searchTypePreset = document.querySelector('.search-types .preset');
+
+		presetBtn.addEventListener('click', function(e) {
+			_this.removeClass(searchTypePreset, 'hide');
+			_this.addClass(searchTypeCustom, 'hide');
+		});
+	}
+
+	if (this.config.create_SearchBox) {
+		customBtn = document.getElementById('custom');
+		searchTypeCustom = document.querySelector('.search-types .custom');
+
+		customBtn.addEventListener('click', function() {
+			_this.addClass(searchTypePreset, 'hide');
+			_this.removeClass(searchTypeCustom, 'hide');
+			searchTypeCustom.querySelector('input[type=text]').focus();
+		});
+
+		searchBox = document.querySelector('.searchBox');
+		searchBoxInput = searchBox.querySelector('input');
+		searchBoxBtn = searchBox.querySelector('button');
+
+		searchBoxInput.addEventListener('keypress', function(e) {
+			if (e.keyCode == 13) {
+				searchQuery = searchBoxInput.value.split(' ').join('+');
+			}
+
+			if (searchQuery) {
+				_this.search(searchQuery);
+			}
+		});
+
+		searchBoxBtn.addEventListener('click', function() {
+			searchQuery = searchBoxInput.value.split(' ').join('+');
+			_this.search(searchQuery);
+		});
+	}
 };
 
 Lightbox.prototype.Modal = function(thumbEl, index) {
@@ -536,7 +572,7 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 		thumbEl.querySelector('img').getAttribute('data-src') +
 		'">' +
 		'<div class="description">' +
-		_this.photos[index].description +
+		this.photos[index].description +
 		'</div>' +
 		'</div>' +
 		'<div class="nav">' +
@@ -559,59 +595,66 @@ Lightbox.prototype.bind_modalEvents = function() {
 		image = modal.querySelector('img'),
 		desc = modal.querySelector('.description'),
 		index = parseInt(modal.getAttribute('data-index')),
-		loadingDots,
-		updateImage = function(i) {
-			loadingDots = 1;
-
-			var fadeNextImage = function() {
-					_this.addClass(image, 'transparent');
-
-					image.setAttribute('src', _this.photos[i].src);
-
-					if (!image.complete || image.naturalHeight === 0) {
-						window.requestAnimationFrame(fadeNextImage);
-						return;
-					} else {
-						clearInterval(loadInterval);
-						_this.removeClass(photo, 'load-spinner');
-						_this.removeClass(photo, 'light');
-						_this.removeClass(image, 'transparent');
-						desc.innerHTML = _this.photos[i].description;
-					}
-				},
-				loadInterval = setInterval(function(i) {
-					if (loadingDots < 5) {
-						loadingDots++;
-						desc.innerHTML =
-							'&#8226; ' + desc.innerHTML + ' &#8226;';
-					} else {
-						loadingDots = 1;
-						desc.innerHTML = '&#8226; loading &#8226;';
-					}
-				}, 1000);
-
-			_this.addClass(photo, 'load-spinner');
-			_this.addClass(photo, 'light');
-			desc.innerHTML = '&#8226; loading &#8226;';
-			fadeNextImage();
-		},
-		close_clickHandler = function(e) {
-			_this.removeClass(_this.body, 'no-scroll');
-			modal.remove();
-		},
-		leftNav_clickHandler = function(e) {
-			e.stopPropagation();
-			position = _this.photos.length - 1;
-			index = index === 0 ? position : index - 1;
-			updateImage(index);
-		},
-		rightNav_clickHandler = function(e) {
-			e.stopPropagation();
-			position = _this.photos.length - 1;
-			index = index === position ? 0 : index + 1;
-			updateImage(index);
-		},
+		loadingDots = 1,
+		raf =
+			window.requestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			window.oRequestAnimationFrame,
 		position;
+
+	function updateImage(i) {
+		var loadNextImage = function() {
+				_this.addClass(image, 'transparent');
+
+				image.src = _this.photos[i].src;
+
+				if (!image.complete) {
+					console.log('stuck here', image);
+					raf(loadNextImage);
+					return;
+				} else {
+					clearInterval(loadInterval);
+					_this.loading(photo, false, 'light');
+					_this.removeClass(image, 'transparent');
+					desc.innerHTML = _this.photos[i].description;
+				}
+			},
+			loadInterval = setInterval(function(i) {
+				if (loadingDots < 5) {
+					loadingDots++;
+					desc.innerHTML =
+						'&#8226; ' + desc.innerHTML + ' &#8226;';
+				} else {
+					loadingDots = 1;
+					desc.innerHTML = '&#8226; loading &#8226;';
+				}
+			}, 1000);
+
+		_this.loading(photo, true, 'light');
+		desc.innerHTML = '&#8226; loading &#8226;';
+		loadNextImage();
+	}
+
+	function close_clickHandler(e) {
+		_this.removeClass(_this.body, 'no-scroll');
+		modal.remove();
+	}
+
+	function leftNav_clickHandler(e) {
+		e.stopPropagation();
+		position = _this.photos.length - 1;
+		index = index === 0 ? position : index - 1;
+		updateImage(index);
+	}
+	
+	function rightNav_clickHandler(e) {
+		e.stopPropagation();
+		position = _this.photos.length - 1;
+		index = index === position ? 0 : index + 1;
+		updateImage(index);
+	}
 
 	close.addEventListener('click', close_clickHandler);
 	leftNav.addEventListener('click', leftNav_clickHandler);
