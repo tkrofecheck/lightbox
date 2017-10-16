@@ -291,19 +291,170 @@ Lightbox.prototype.render = function() {
 			_this.addClass(this, 'light');
 			_this.Modal(this, i);
 		});
+Lightbox.prototype.render_searchTypes = function() {
+	var _this = this,
+		searchContainer = this.lbContainer.querySelector('.search'),
+		types = document.createElement('div'),
+		searchTypes = document.createElement('div');
+
+	function createType(name, isChecked, container) {
+		var div = document.createElement('div'),
+			input = document.createElement('input'),
+			label = document.createElement('label');
+
+		types.appendChild(div);
+
+		input.setAttribute('id', name);
+		input.setAttribute('name', 'search-type');
+		input.setAttribute('type', 'radio');
+
+		if (isChecked) {
+			input.setAttribute('checked', '');
+		}
+
+		div.appendChild(input);
+
+		label.setAttribute('for', name);
+		label.innerHTML = name;
+		div.appendChild(label);
+
+		container.appendChild(div);
 	}
 
-	_this.removeClass(clearStorage, 'hide');
+	function createSearchType(name, visible) {
+		var div = document.createElement('div');
+
+		_this.addClass(div, name);
+
+		if (!visible) {
+			_this.addClass(div, 'hide');
+		}
+
+		searchTypes.appendChild(div);
+	}
+
+	searchContainer.appendChild(types);
+	searchContainer.appendChild(searchTypes);
+
+	this.addClass(types, 'types');
+	this.addClass(searchTypes, 'search-types');
+
+	if (this.config.create_Dropdown) {
+		createType('preset', true, types);
+		createSearchType('preset', true);
+
+		if (this.config.presetDropdownJson === null) {
+			console.warn('JSON file/object to create dropdown expected.');
+			return;
+		} else {
+			this.createPresetDropdown();
+		}
+	}
+
+	if (this.config.create_SearchBox) {
+		createType('custom', false, types);
+		if (this.config.create_Dropdown) {
+			createSearchType('custom', false);
+		} else {
+			createSearchType('custom', true);
+		}
+		this.createSearchBox();
+	}
+
+	if (!this.config.create_Dropdown || !this.config.create_SearchBox) {
+		types.style.display = 'none'; // only display toggle if both are present
+	}
+
+	this.bind_searchTypeEvents();
 };
 
-Lightbox.prototype.hasClass = function(el, className) {
-	if (el.classList) {
-		return el.classList.contains(className);
-	} else {
-		return !!el.className.match(
-			new RegExp('(\\s|^)' + className + '(\\s|$)')
-		);
+Lightbox.prototype.createPresetDropdown = function() {
+	var _this = this,
+		response,
+		div,
+		dropdown,
+		option;
+
+	function createTopic(topic) {
+		option = document.createElement('option');
+		option.setAttribute('value', '');
+		_this.addClass(option, 'category');
+		option.innerHTML = topic.name;
+		dropdown.appendChild(option);
+
+		for (let i = 0; i < topic.options.length; i++) {
+			option = document.createElement('option');
+			option.setAttribute(
+				'value',
+				topic.name
+					.toLowerCase()
+					.split(' ')
+					.join('+') +
+					'+' +
+					topic.options[i].split(' ').join('+')
+			);
+			option.innerHTML = topic.options[i];
+			dropdown.appendChild(option);
+		}
 	}
+
+	function createDropdown(data) {
+		var presetContainer = document.querySelector('.search-types .preset');
+
+		div = document.createElement('div');
+		dropdown = document.createElement('select');
+		dropdown.setAttribute('name', 'gallerySelector');
+
+		option = document.createElement('option');
+		option.setAttribute('selected', 'selected');
+		option.setAttribute('value', '');
+		option.innerHTML = 'Select a Topic';
+		dropdown.appendChild(option);
+
+		for (let i = 0; i < data.topics.length; i++) {
+			createTopic(data.topics[i]);
+		}
+
+		presetContainer.appendChild(div);
+		div.appendChild(dropdown);
+
+		dropdown.addEventListener('change', function() {
+			Gallery.search(this.value);
+		});
+	}
+
+	if (typeof this.config.presetDropdownJson === 'string') {
+		this.xhrRequest('GET', _this.config.presetDropdownJson, createDropdown);
+	} else {
+		createDropdown(this.config.presetDropdownJson);
+	}
+};
+
+Lightbox.prototype.createSearchBox = function() {
+	var customContainer = document.querySelector('.search-types .custom'),
+		div = document.createElement('div'),
+		input = document.createElement('input'),
+		label = document.createElement('label'),
+		button = document.createElement('button');
+
+	this.addClass(div, 'searchBox');
+
+	input.setAttribute('type', 'text');
+	input.setAttribute('id', 'mySearch');
+	input.setAttribute('autocomplete', 'on');
+	input.setAttribute('required', '');
+
+	label.setAttribute('for', 'mySearch');
+	label.innerHTML = '<span>' + this.config.customSearchLabel + '</span>';
+
+	button.setAttribute('name', 'search');
+	button.innerHTML = 'Search';
+
+	div.appendChild(input);
+	div.appendChild(label);
+	div.appendChild(button);
+
+	customContainer.appendChild(div);
 };
 
 Lightbox.prototype.addClass = function(el, className) {
