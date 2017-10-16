@@ -1,14 +1,22 @@
 /* START: Cookie set/get from W3schools */
-function Lightbox(apiKeys) {
-	this.apiKeys = typeof apiKeys === 'string' ? apiKeys.split(',') : apiKeys;
+function Lightbox(config) {
+	this.apiKeys =
+		typeof config.apiKeys === 'string'
+			? config.apiKeys.split(',')
+			: config.apiKeys;
 	this.body = document.getElementsByTagName('body')[0];
+	this.gallerySelector = config.gallerySelector || null;
 	this.gallery = null;
 	this.responseJson = null;
 	this.photos = [];
 	this.cachedData = false;
 	this.searchResult = null;
 	this.searchQuery = null;
-	this.cacheSearchPrefix = 'lbsearch_';
+	this.cacheSearchPrefix = config.cacheSearchPrefix || null; // null = off
+
+	if (this.gallerySelector === null) {
+		console.warn('DOM selector required to initialize Lightbox.');
+	}
 }
 
 Lightbox.prototype.useWebStorage = function() {
@@ -132,20 +140,13 @@ Lightbox.prototype.getData = function() {
 	}
 };
 
-Lightbox.prototype.init = function(selector) {
-	var galleryDiv;
-
-	if (typeof selector === 'undefined' || selector === '') {
-		console.log('Selector required to initialize Lightbox.');
-		return;
-	}
-
-	this.gallery = document.querySelector(selector);
+Lightbox.prototype.init = function() {
+	this.gallery = document.querySelector(this.gallerySelector);
 
 	if (typeof this.gallery === 'undefined' || this.gallery === null) {
 		throw Error(
-			'DOMelement with selector, "' +
-				selector +
+			'HTML_DOMelement with selector, "' +
+				this.gallerySelector +
 				'" missing in your HTML document.'
 		);
 		return;

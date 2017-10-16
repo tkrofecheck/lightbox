@@ -125,7 +125,7 @@
                     </div>
                 </div>
             </div>
-            <div class="gallery"></div>
+            <div id="gallery"></div>
             <div class="clear-storage">
                 <button class="hide">Clear Search History</button>
             </div>
@@ -166,15 +166,18 @@
             * NOTE: Multiple instances are supported, but DOM must be updated with
             *       second instance name and new instance must use correct selector
             */
-            var apiKeys = [
-                    'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc',
-                    'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
-                    'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
-                ],
-                Gallery;
-            
-            Gallery = new Lightbox(apiKeys);
-            Gallery.init('.gallery');
+            var Gallery = new Lightbox({
+                    "presetJsonPath": "preset.json", // JSON used to populate dropdown
+                    "apiKeys": [
+                        'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc',
+                        'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
+                        'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
+                    ], // array or string
+                    "gallerySelector": "#gallery",
+                    "cacheSearchPrefix" : "lbsearch_"
+                });
+
+            Gallery.init();
         </script>
     </body>
 </html>
