@@ -52,114 +52,50 @@ Lightbox.prototype.useWebStorage = function() {
 	}
 };
 
-Lightbox.prototype.setCookie = function(cname, cvalue, exdays) {
-	var d = new Date();
-	d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-	var expires = 'expires=' + d.toUTCString();
-	document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
-};
-
-Lightbox.prototype.getCookie = function(cname) {
-	var name = cname + '=';
-	var decodedCookie = decodeURIComponent(document.cookie);
-	var ca = decodedCookie.split(';');
-	for (var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) === ' ') {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) === 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return '';
-};
-
-Lightbox.prototype.getData = function() {
+Lightbox.prototype.xhrRequest = function(type, url, successHandler) {
 	var _this = this,
-		query = _this.searchQuery,
-		cacheKey = _this.cacheSearchPrefix + query,
-		useWebStorage = _this.useWebStorage(),
-		cachedJsonStr,
-		complete = false,
-		xhrSend = function(index) {
-			var xhr,
-				url =
-					'https://www.googleapis.com/customsearch/v1?cx=003855216133477760451%3A4zvjz-bh334&cr=true&imgType=photo&q=' +
-					query +
-					'&safe=high&searchType=image&key=' +
-					_this.apiKeys[index];
+		useWebStorage = this.useWebStorage(),
+		xhr;
 
-			if (window.XMLHttpRequest) {
-				xhr = new XMLHttpRequest();
-			} else {
-				// code for older browsers
-				xhr = new ActiveXObject('Microsoft.XMLHTTP');
-			}
-
-			xhr.onreadystatechange = function() {
-				if (this.readyState === 4) {
-					if (this.status === 200) {
-						complete = true;
-
-						_this.responseJson = JSON.parse(this.responseText);
-
-						// use later after we get pages setup
-						//cacheKey = cacheKey + _this.responseJson.queries.request[0].startIndex;
-
-						if (useWebStorage) {
-							sessionStorage.setItem(cacheKey, this.responseText);
-						} else {
-							_this.setCookie(cacheKey, this.responseText, 1);
-						}
-
-						_this.responseJson = JSON.parse(this.responseText);
-						_this.ready();
-						return;
-					}
-
-					if (this.status === 403) {
-						index++;
-
-						if (index < _this.apiKeys.length - 1) {
-							xhrSend(index);
-						} else {
-							complete = true;
-							return;
-						}
-					}
-				}
-			};
-
-			if (!complete) {
-				xhr.open('GET', url, true);
-				xhr.send();
-			}
-		};
-
-	/*
-	* Do not make multiple calls due to API limit restriction
-	* Access cached response if available in webstorage or cookie
-	*/
-	if (complete) {
-		return;
+	function errorHandler(msg) {
+		console.error(msg);
 	}
 
-	cachedJsonStr =
-		sessionStorage.getItem(cacheKey) || _this.getCookie(cacheKey) || null;
-
-	if (
-		typeof cachedJsonStr !== 'undefined' &&
-		cachedJsonStr !== null &&
-		cachedJsonStr !== ' '
-	) {
-		_this.cachedData = true;
-		_this.responseJson = JSON.parse(cachedJsonStr);
-		_this.ready();
+	if (window.XMLHttpRequest) {
+		xhr = new XMLHttpRequest();
 	} else {
-		_this.cachedData = false;
-		xhrSend(0);
+		// code for older browsers
+		xhr = new ActiveXObject('Microsoft.XMLHTTP');
 	}
+
+	xhr.open('GET', url);
+	xhr.responseType = 'json';
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			if (xhr.status === 200) {
+				successHandler && successHandler(xhr.response);
+			}
+
+			if (xhr.status === 403) {
+				alert(
+					'API Limit reached...\nPlease use a different API key, or try again tomorrow.'
+				);
+				errorHandler(xhr.status);
+			}
+
+			if (xhr.status === 404) {
+				console.warn(
+					'Request failed to "GET", "' +
+						url +
+						'".\nReturned status of ' +
+						xhr.status
+				);
+
+				errorHandler(xhr.status);
+			}
+		}
+	};
+	xhr.send();
 };
 
 Lightbox.prototype.init = function() {
