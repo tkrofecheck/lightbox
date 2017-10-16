@@ -166,18 +166,20 @@
             * NOTE: Multiple instances are supported, but DOM must be updated with
             *       second instance name and new instance must use correct selector
             */
-            var Gallery = new Lightbox({
-                    "presetJsonPath": "preset.json", // JSON used to populate dropdown
-                    "apiKeys": [
-                        'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc',
-                        'AIzaSyAVGFZDgKUNvMMjLi5I4uS0f0ag6ETGHLw',
-                        'AIzaSyCaecX-9H4ptKaqzJm0jx0aRjLKDNEuiG4'
-                    ], // array or string
-                    "gallerySelector": "#gallery",
-                    "cacheSearchPrefix" : "lbsearch_"
-                });
+            var config = {
+                apiKey: 'AIzaSyCfE0Su_1tdA-u36iZIjmNIgSm3XnV56Cc', // string
+                cachePrefix: "lbsearch_",
+                containerName: "lb-container",
+                create_SearchBox: true, // (default: true) true or false to display a search box
+                create_Dropdown: true, // (default: false) true or false to display dropdown selector
+                monitorConnection: true, // (default: false) true or false to display connection status
+                presetDropdownJson: "data/preset.json", // filename string or JSON object
+                searchName: "My Image Search"
+            },
+                Gallery;
 
+            Gallery = new Lightbox(config);
             Gallery.init();
-        </script>
+        </script>        
     </body>
 </html>

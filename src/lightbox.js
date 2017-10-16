@@ -1,21 +1,36 @@
 /* START: Cookie set/get from W3schools */
-function Lightbox(config) {
-	this.apiKeys =
-		typeof config.apiKeys === 'string'
-			? config.apiKeys.split(',')
-			: config.apiKeys;
+function Lightbox(cfg) {
+	this.config = {
+		apiKey: cfg.apiKey || '',
+		cachePrefix: cfg.cachePrefix || null,
+		containerName: cfg.containerName || 'lb-container',
+		create_Dropdown: cfg.create_Dropdown || false,
+		create_SearchBox: cfg.create_SearchBox || true,
+		customSearchLabel: cfg.customSearchLabel || 'What are you looking for?',
+		monitorConnection: cfg.monitorConnection || false,
+		presetDropdownJson: cfg.create_Dropdown ? cfg.presetDropdownJson : null,
+		searchName: cfg.searchName || 'Image Search'
+	};
+
 	this.body = document.getElementsByTagName('body')[0];
-	this.gallerySelector = config.gallerySelector || null;
 	this.gallery = null;
 	this.responseJson = null;
 	this.photos = [];
 	this.cachedData = false;
 	this.searchResult = null;
 	this.searchQuery = null;
-	this.cacheSearchPrefix = config.cacheSearchPrefix || null; // null = off
 
-	if (this.gallerySelector === null) {
-		console.warn('DOM selector required to initialize Lightbox.');
+	if (this.config.gallerySelector === null) {
+		console.warn('DOM gallery selector required to initialize Lightbox.');
+	}
+
+	if (
+		this.config.create_Dropdown &&
+		!this.config.create_DropdownJson === null
+	) {
+		console.warn('File path or JSON object expected to create dropdown.');
+	}
+
 	}
 }
 
