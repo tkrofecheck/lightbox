@@ -714,7 +714,7 @@ Lightbox.prototype.watch_connectionStatus = function() {
 		),
 		connection = container.querySelector('.connection'),
 		formElements = container.querySelectorAll('input,select,button');
-
+	
 	function connectionStatus() {
 		var status = navigator.onLine ? 'online' : 'offline';
 		var disabled = status === 'offline';
@@ -722,13 +722,13 @@ Lightbox.prototype.watch_connectionStatus = function() {
 		connection.className = 'connection ' + status;
 
 		if (status === 'offline') {
-			formElements.forEach(function(node) {
-				node.setAttribute('disabled', true);
-			});
+			for (let i=0; i< formElements.length; i++) {
+				formElements[i].setAttribute('disabled', true);
+			}
 		} else {
-			formElements.forEach(function(el) {
-				el.removeAttribute('disabled');
-			});
+			for (let i=0; i< formElements.length; i++) {
+				formElements[i].removeAttribute('disabled');
+			}
 		}
 	}
 
