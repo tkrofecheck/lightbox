@@ -31,6 +31,13 @@ function Lightbox(cfg) {
 		console.warn('File path or JSON object expected to create dropdown.');
 	}
 
+	// Some browsers do not support console - this will prevent errors
+	if (typeof console == 'undefined') {
+		this.console = {
+			log: function() {},
+			warn: function() {},
+			error: function() {}
+		};
 	}
 }
 
