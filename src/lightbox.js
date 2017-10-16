@@ -99,19 +99,7 @@ Lightbox.prototype.xhrRequest = function(type, url, successHandler) {
 };
 
 Lightbox.prototype.init = function() {
-	this.gallery = document.querySelector(this.gallerySelector);
-
-	if (typeof this.gallery === 'undefined' || this.gallery === null) {
-		throw Error(
-			'HTML_DOMelement with selector, "' +
-				this.gallerySelector +
-				'" missing in your HTML document.'
-		);
-		return;
-	}
-
-	this.addClass(this.gallery, 'lb-gallery');
-	this.bindEvents();
+	this.createContainer();
 };
 
 Lightbox.prototype.loading = function(el, display, type) {
