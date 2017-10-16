@@ -229,6 +229,7 @@ body {
             flex-direction: row;
     height: 50px;
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .lb-container .search-types .custom input,
