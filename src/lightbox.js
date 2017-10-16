@@ -233,7 +233,7 @@ Lightbox.prototype.render_gallery = function() {
 
 	if (!_this.searchResult) {
 		searchResult = document.createElement('div');
-		this.lbContainer.insertBefore(searchResult, this.gallery);
+		document.querySelector('.search').appendChild(searchResult);
 		this.addClass(searchResult, 'search-result');
 		this.searchResult = document.querySelector('.search-result');
 	}
