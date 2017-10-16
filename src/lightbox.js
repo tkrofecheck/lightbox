@@ -114,11 +114,13 @@ Lightbox.prototype.init = function() {
 	this.bindEvents();
 };
 
-Lightbox.prototype.galleryLoad = function(display) {
+Lightbox.prototype.loading = function(el, display, type) {
 	if (display) {
-		_this.addClass(this.gallery, 'load-spinner'); // display loading load-spinner
+		this.addClass(el, 'load-spinner'); // display loading load-spinner
+		this.addClass(el, type);
 	} else {
-		_this.removeClass(this.gallery, 'load-spinner'); // display loading load-spinner
+		this.removeClass(el, 'load-spinner'); // display loading load-spinner
+		this.removeClass(el, type);
 	}
 };
 
