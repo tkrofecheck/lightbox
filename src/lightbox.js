@@ -1,15 +1,15 @@
 /* START: Cookie set/get from W3schools */
 function Lightbox(cfg) {
 	this.config = {
-		apiKey: cfg.apiKey || '',
-		cachePrefix: cfg.cachePrefix || null,
-		containerName: cfg.containerName || 'lb-container',
-		create_Dropdown: cfg.create_Dropdown || false,
-		create_SearchBox: cfg.create_SearchBox || true,
-		customSearchLabel: cfg.customSearchLabel || 'What are you looking for?',
-		monitorConnection: cfg.monitorConnection || false,
-		presetDropdownJson: cfg.create_Dropdown ? cfg.presetDropdownJson : null,
-		searchName: cfg.searchName || 'Image Search'
+		apiKey: (typeof cfg.apiKey !== 'undefined') ? cfg.apiKey : '',
+		cachePrefix: (typeof cfg.cachePrefix !== 'undefined') ? cfg.cachePrefix : null,
+		containerName: (typeof cfg.containerName !== 'undefined') ? cfg.containerName : 'lb-container',
+		create_Dropdown: (typeof cfg.create_Dropdown !== 'undefined') ? cfg.create_Dropdown : false,
+		create_SearchBox: (typeof cfg.create_SearchBox !== 'undefined') ? cfg.create_SearchBox : true,
+		customSearchLabel: (typeof cfg.customSearchLabel !== 'undefined') ? cfg.customSearchLabel : 'What are you looking for?',
+		monitorConnection: (typeof cfg.monitorConnection !== 'undefined') ? cfg.monitorConnection : false,
+		presetDropdownJson: (typeof cfg.create_Dropdown !== 'undefined' && cfg.presetDropdownJson !== 'undefined') ? cfg.presetDropdownJson : null,
+		searchName: (typeof cfg.searchName !== 'undefined') ? cfg.searchName : 'Image Search'
 	};
 
 	this.body = document.getElementsByTagName('body')[0];
