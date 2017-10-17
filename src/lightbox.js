@@ -615,8 +615,6 @@ Lightbox.prototype.bind_modalEvents = function() {
 		var loadNextImage = function() {
 				_this.addClass(image, 'transparent');
 
-				image.src = _this.photos[i].src;
-
 				if (!image.complete) {
 					raf(loadNextImage);
 					return;
@@ -639,6 +637,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 
 		_this.loading(photo, true, 'light');
 		desc.innerHTML = '&#8226; loading &#8226;';
+		image.src = _this.photos[i].src;
 		loadNextImage();
 	}
 
