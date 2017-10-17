@@ -24,15 +24,8 @@ function Lightbox(cfg) {
 		console.warn('DOM gallery selector required to initialize Lightbox.');
 	}
 
-	if (
-		this.config.create_Dropdown &&
-		!this.config.create_DropdownJson === null
-	) {
-		console.warn('File path or JSON object expected to create dropdown.');
-	}
-
 	// Some browsers do not support console - this will prevent errors
-	if (typeof console == 'undefined') {
+	if (typeof console === 'undefined') {
 		this.console = {
 			log: function() {},
 			warn: function() {},
@@ -321,9 +314,7 @@ Lightbox.prototype.render_searchTypes = function() {
 	this.addClass(searchTypes, 'search-types');
 
 	if (this.config.create_Dropdown) {
-		createType('preset', true, types);
 		createSearchType('preset', true);
-
 		if (this.config.presetDropdownJson === null) {
 			console.warn('JSON file/object to create dropdown expected.');
 			return;
@@ -333,7 +324,6 @@ Lightbox.prototype.render_searchTypes = function() {
 	}
 
 	if (this.config.create_SearchBox) {
-		createType('custom', false, types);
 		if (this.config.create_Dropdown) {
 			createSearchType('custom', false);
 		} else {
@@ -342,11 +332,15 @@ Lightbox.prototype.render_searchTypes = function() {
 		this.createSearchBox();
 	}
 
-	if (!this.config.create_Dropdown || !this.config.create_SearchBox) {
-		types.style.display = 'none'; // only display toggle if both are present
+	if (this.config.create_Dropdown && this.config.create_SearchBox) {
+		console.log(this.config);
+		// only display toggle are enabled
+		createType('preset', true, types);
+		createType('custom', false, types);
+		this.bind_searchTypeEvents(true);
+	} else {
+		this.bind_searchTypeEvents(false);
 	}
-
-	this.bind_searchTypeEvents();
 };
 
 Lightbox.prototype.createPresetDropdown = function() {
@@ -489,7 +483,7 @@ Lightbox.prototype.bind_galleryEvents = function() {
 	});
 };
 
-Lightbox.prototype.bind_searchTypeEvents = function() {
+Lightbox.prototype.bind_searchTypeEvents = function(toggleOn) {
 	var _this = this,
 		presetBtn,
 		customBtn,
@@ -500,7 +494,7 @@ Lightbox.prototype.bind_searchTypeEvents = function() {
 		searchBoxBtn,
 		searchQuery;
 
-	if (this.config.create_Dropdown) {
+	if (toggleOn) {
 		presetBtn = document.getElementById('preset');
 		searchTypePreset = document.querySelector('.search-types .preset');
 
@@ -508,9 +502,7 @@ Lightbox.prototype.bind_searchTypeEvents = function() {
 			_this.removeClass(searchTypePreset, 'hide');
 			_this.addClass(searchTypeCustom, 'hide');
 		});
-	}
 
-	if (this.config.create_SearchBox) {
 		customBtn = document.getElementById('custom');
 		searchTypeCustom = document.querySelector('.search-types .custom');
 
@@ -519,7 +511,9 @@ Lightbox.prototype.bind_searchTypeEvents = function() {
 			_this.removeClass(searchTypeCustom, 'hide');
 			searchTypeCustom.querySelector('input[type=text]').focus();
 		});
+	}
 
+	if (this.config.create_SearchBox) {
 		searchBox = document.querySelector('.searchBox');
 		searchBoxInput = searchBox.querySelector('input');
 		searchBoxBtn = searchBox.querySelector('button');
