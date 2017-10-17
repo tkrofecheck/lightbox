@@ -668,7 +668,7 @@ Lightbox.prototype.createContainer = function() {
 	var container = document.createElement('div'),
 		html = '';
 
-	html += '<div class="search">';
+	html += '<div class="lb-container" data-name="' + this.config.containerName + '"><div class="search">';
 
 	if (this.config.monitorConnection) {
 		html +=
@@ -688,17 +688,14 @@ Lightbox.prototype.createContainer = function() {
 		'<button class="hide">Clear Search History</button>' +
 		'<span class="hide">Search History Cleared!</span>' +
 		'</div>' +
+		'</div>' +
 		'</div>';
 
-	container.setAttribute('data-name', this.config.containerName);
-	this.addClass(container, 'lb-container');
-	container.innerHTML = html;
+	document.write(html);
 
-	this.body.appendChild(container);
+	this.lbContainer = document.querySelector('[data-name=' + this.config.containerName + ']');
 
-	this.lbContainer = container;
-
-	this.gallery = container.querySelector('.lb-gallery');
+	this.gallery = this.lbContainer.querySelector('.lb-gallery');
 
 	if (this.config.monitorConnection) {
 		this.watch_connectionStatus();
