@@ -99,6 +99,10 @@ Lightbox.prototype.xhrRequest = function(type, url, successHandler) {
 };
 
 Lightbox.prototype.init = function() {
+	if ((typeof window.orientation !== "undefined") || navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
+		this.addClass(this.body, 'mobile');
+	}
+	
 	this.createContainer();
 };
 
@@ -572,9 +576,9 @@ Lightbox.prototype.Modal = function(thumbEl, index) {
 		'<img src="' +
 		thumbEl.querySelector('img').getAttribute('data-src') +
 		'">' +
-		'<div class="description">' +
+		'<div class="description"><span>' +
 		this.photos[index].description +
-		'</div>' +
+		'</span></div>' +
 		'</div>' +
 		'<div class="nav">' +
 		'<span class="left"></span>' +
@@ -594,7 +598,7 @@ Lightbox.prototype.bind_modalEvents = function() {
 		rightNav = modal.querySelector('.nav .right'),
 		photo = modal.querySelector('.photo-container'),
 		image = modal.querySelector('img'),
-		desc = modal.querySelector('.description'),
+		desc = modal.querySelector('.description span'),
 		index = parseInt(modal.getAttribute('data-index')),
 		loadingDots = 1,
 		raf =
